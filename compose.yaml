@@ -1,0 +1,45 @@
+services:
+
+  postgres:
+    image: postgres:16.4
+    container_name: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: tasks-db
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    networks:
+      - task-tracker
+
+  zookeeper:
+    image: bitnami/zookeeper:3.9.2
+    container_name: zookeeper
+    restart: on-failure
+    ports:
+      - '2181:2181'
+    environment:
+      ZOO_PORT: 2181
+    networks:
+      - task-tracker
+
+  kafka:
+    image: bitnami/kafka:3.8.0
+    container_name: kafka
+    restart: on-failure
+    depends_on:
+      - zookeeper
+    ports:
+      - '9092:9092'
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_TOPIC: "EMAIL_SENDING_TASKS"
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+    networks:
+      - task-tracker
+
+networks:
+  task-tracker:
+    driver: bridge
