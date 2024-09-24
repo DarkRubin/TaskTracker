@@ -4,22 +4,28 @@ services:
     image: postgres:16.4
     container_name: postgres
     ports:
-      - '5432:5432'
+      - '5433:5432'
     environment:
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: tasks-db
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${PG_USERNAME}" ]
+      interval: 20s
+      timeout: 5s
+      retries: 3
     networks:
       - task-tracker
 
   zookeeper:
-    image: bitnami/zookeeper:3.9.2
+    image: bitnami/zookeeper:3.8.0
     container_name: zookeeper
     restart: on-failure
     ports:
       - '2181:2181'
     environment:
       ZOO_PORT: 2181
+      ALLOW_ANONYMOUS_LOGIN: "yes"
     networks:
       - task-tracker
 
@@ -34,11 +40,17 @@ services:
     environment:
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_LISTENERS: "INTERNAL://:29092,EXTERNAL://:9092"
       KAFKA_TOPIC: "EMAIL_SENDING_TASKS"
       ALLOW_PLAINTEXT_LISTENER: "yes"
     networks:
       - task-tracker
+
+volumes:
+  postgres_db:
+    name: postgres_db
 
 networks:
   task-tracker:
