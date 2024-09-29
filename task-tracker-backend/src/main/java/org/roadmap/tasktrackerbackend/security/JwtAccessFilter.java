@@ -46,11 +46,11 @@ public class JwtAccessFilter extends OncePerRequestFilter {
         } else {
             token = header.substring(PREFIX.length());
         }
-        var username = jwtService.extractUserName(token);
+        var username = jwtService.extractEmail(token);
         if (Strings.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.loadUserByUsername(username);
-            if (jwtService.isTokenValid(token, userDetails)) {
-                authorize(request, userDetails);
+            UserDetails user = userService.loadUserByUsername(username);
+            if (jwtService.isTokenValid(token, user)) {
+                authorize(request, user);
             }
         }
         filterChain.doFilter(request, response);
@@ -72,7 +72,7 @@ public class JwtAccessFilter extends OncePerRequestFilter {
     private void authorize(HttpServletRequest request, UserDetails userDetails) {
         var authToken = new UsernamePasswordAuthenticationToken(
                 userDetails,
-                null,
+                userDetails.getPassword(),
                 userDetails.getAuthorities()
         );
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
