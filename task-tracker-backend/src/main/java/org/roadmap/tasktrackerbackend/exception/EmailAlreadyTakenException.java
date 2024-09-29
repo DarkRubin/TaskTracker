@@ -2,7 +2,7 @@ package org.roadmap.tasktrackerbackend.exception;
 
 public class EmailAlreadyTakenException extends BasicRuntimeException {
 
-    public EmailAlreadyTakenException(String message) {
-        super(message, 409);
+    public EmailAlreadyTakenException() {
+        super("This email is already taken", 409);
     }
 }
