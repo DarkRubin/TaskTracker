@@ -1,11 +1,11 @@
 package org.roadmap.tasktrackerbackend.security;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.roadmap.tasktrackerbackend.service.JwtService;
@@ -30,10 +30,8 @@ public class JwtAccessFilter extends OncePerRequestFilter {
     private final UserService userService;
 
     @Override
-    protected void doFilterInternal(@NotNull HttpServletRequest request,
-                                    @NotNull HttpServletResponse response,
-                                    @NotNull FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain)
+            throws ServletException, IOException {
         String token;
         String header = request.getHeader("Authorization");
         if (header == null || !header.startsWith(PREFIX)) {
