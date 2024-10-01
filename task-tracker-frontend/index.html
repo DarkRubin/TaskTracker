@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Task tracker</title>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <script src="js/bootstrap.bundle.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/jquery-3.7.1.js"></script>
+  <script src="js/script.js"></script>
+</head>
+<body>
+<br>
+  <header class="container">
+    <div class="row">
+      <div class="col-6">
+        <h1>Task tracker</h1>
+      </div>
+      <div class="col-6 text-center">
+        <button class="col-3 btn btn-primary" id="loginButton">Login</button>
+        <button class="col-3 btn btn-primary" id="signInButton">Sign-in</button>
+      </div>
+    </div>
+
+  </header>
+  <main class="container">
+  </main>
+<div id="signInModal" tabindex="-1" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header align-self-center">
+        <h2 class="text-center">Registration</h2>
+      </div>
+      <form id="signIn" class="form-floating">
+        <div class="modal-body row">
+          <div class="col-3"></div>
+          <div class="col-6">
+            <label class="form-label fw-bolder">Email
+              <input class="form-control" type="email" name="email" required>
+            </label>
+          </div>
+          <div class="col-3"></div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-6">
+            <p id="signInEmailError" class="text-danger"></p>
+          </div>
+          <div class="col-sm-3"></div>
+          <div class="col-3"></div>
+          <div class="col-6">
+            <label class="form-label fw-bolder">Password
+              <input class="form-control" type="password" name="password" required>
+            </label>
+          </div>
+          <div class="col-3"></div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-6">
+            <p id="signInPasswordError" class="text-danger"></p>
+          </div>
+          <div class="col-sm-3"></div>
+          <div class="col-3"></div>
+          <div class="col-6">
+            <label class="form-label fw-bolder">Confirm password
+              <input class="form-control" type="password" name="confirmPassword" required>
+            </label>
+          </div>
+          <div class="col-3"></div>
+          <div class="col-3"></div>
+          <div class="col-6">
+            <p id="signInError" class="text-danger"></p>
+          </div>
+          <div class="col-3"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Send</button>
+          <button type="button" id="close-modal-btn-signin" class="btn btn-danger">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+  <div id="loginModal" tabindex="-1" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header align-self-center">
+          <h2 class="text-center">Authorization</h2>
+        </div>
+        <form class="form-floating">
+          <div class="modal-body row">
+            <div class="col-3"></div>
+            <div class="col-6">
+              <label class="form-label fw-bolder">Email
+                <input class="form-control" type="email" name="email" required>
+              </label>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+              <p id="loginEmailError" class="text-danger"></p>
+            </div>
+            <div class="col-sm-3"></div>
+            <div class="col-3"></div>
+            <div class="col-6">
+              <label class="form-label fw-bolder">Password
+                <input class="form-control" type="password" name="password" required>
+              </label>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+              <p id="loginPasswordError" class="text-danger"></p>
+            </div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+              <p id="loginError" class="text-danger"></p>
+            </div>
+            <div class="col-sm-3"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Send</button>
+            <button type="button" id="close-modal-btn-login" class="btn btn-danger">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
