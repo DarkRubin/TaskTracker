@@ -1,22 +1,18 @@
 package org.roadmap.tasktrackerbackend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.roadmap.tasktrackerbackend.dto.TaskDTO;
-import org.roadmap.tasktrackerbackend.exception.UserNotAuthorizedException;
-import org.roadmap.tasktrackerbackend.model.User;
+import org.roadmap.tasktrackerbackend.model.Task;
 import org.roadmap.tasktrackerbackend.repository.TaskRepository;
-import org.roadmap.tasktrackerbackend.repository.UserRepository;
-import org.roadmap.tasktrackerbackend.service.TaskService;
+import org.roadmap.tasktrackerbackend.security.CurrentUserAuthorizationDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-
-import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,55 +20,52 @@ public class TaskController {
 
     private final TaskRepository repository;
 
-    private final TaskService service;
-
-    private final UserRepository userRepository;
-
-    private User getCurrentUser() {
-        var email = getContext().getAuthentication().getName();
-        var password = getContext().getAuthentication().getCredentials();
-        return userRepository.findByEmailAndPassword(email, password.toString())
-                .orElseThrow(UserNotAuthorizedException::new);
-    }
+    private final CurrentUserAuthorizationDetails details;
 
     @GetMapping("/tasks")
-    public List<TaskDTO> getAll() {
-        return service.getTasks(getCurrentUser());
+    public List<Task> getAll() {
+        return repository.getAllByOwner(details.getCurrentUser());
     }
 
     @GetMapping("/tasks/finished")
-    public List<TaskDTO> getFinished() {
-        return service.getFinished(getCurrentUser());
+    public List<Task> getFinished() {
+        return repository.getAllFinishedByOwner(details.getCurrentUser());
     }
 
     @PostMapping(value = "/task",
             consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
-    public TaskDTO add(String title, String text) {
-        return service.save(title, text, getCurrentUser());
+    public Task add(String title, String text) {
+        return repository.save(new Task(title, text, details.getCurrentUser()));
     }
 
     @DeleteMapping(value = "/task",
             consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
     public void delete(UUID uuid) {
-        repository.deleteByUuid(uuid);
+        repository.delete(repository.getTaskByUuidAndOwnerOrThrow(uuid, details.getCurrentUser()));
     }
 
     @PatchMapping(value = "/task/title",
             consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
-    public void updateTitle(UUID uuid, String newTitle) {
-        service.updateTitle(uuid, newTitle);
+    public Task updateTitle(UUID uuid, String newTitle) {
+        Task task = repository.getTaskByUuidAndOwnerOrThrow(uuid, details.getCurrentUser());
+        task.setTitle(newTitle);
+        return repository.save(task);
     }
 
     @PatchMapping(value = "/task/text",
             consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
-    public void updateText(UUID uuid, String newText) {
-        service.updateText(uuid, newText);
+    public Task updateText(UUID uuid, String newText) {
+        Task task = repository.getTaskByUuidAndOwnerOrThrow(uuid, details.getCurrentUser());
+        task.setText(newText);
+        return repository.save(task);
     }
 
     @PatchMapping(value = "/task/finish",
             consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
-    public void finish(UUID uuid) {
-        service.finishTask(uuid);
+    public Task finish(UUID uuid) {
+        Task task = repository.getTaskByUuidAndOwnerOrThrow(uuid, details.getCurrentUser());
+        task.setFinishedTime(Instant.now());
+        return repository.save(task);
     }
 
 
