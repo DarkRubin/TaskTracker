@@ -1,6 +1,7 @@
 package org.roadmap.tasktrackerbackend.security.filter;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
+import org.roadmap.tasktrackerbackend.exception.InvalidTokenException;
 import org.roadmap.tasktrackerbackend.exception.TokenExpiredException;
 import org.roadmap.tasktrackerbackend.service.JwtService;
 import org.roadmap.tasktrackerbackend.service.UserService;
@@ -54,8 +56,9 @@ public class JwtAccessFilter extends OncePerRequestFilter {
                 }
             } catch (ExpiredJwtException e) {
                 throw new TokenExpiredException();
+            } catch (MalformedJwtException e) {
+                throw new InvalidTokenException();
             }
-
         }
         filterChain.doFilter(request, response);
     }
