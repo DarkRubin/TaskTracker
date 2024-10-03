@@ -1,6 +1,7 @@
 package org.roadmap.tasktrackerbackend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.roadmap.tasktrackerbackend.exception.UserNotFoundException;
 import org.roadmap.tasktrackerbackend.repository.UserRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,8 +17,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = repository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        var user = repository.findByEmail(username).orElseThrow(UserNotFoundException::new);
         return User.withUsername(username).password(user.getPassword()).build();
     }
 }
