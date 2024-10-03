@@ -43,13 +43,17 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             throw new InvalidUserDetailsException();
         }
-        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+        String email = dto.getEmail();
+        String password = dto.getPassword();
+        if (!password.equals(dto.getConfirmPassword())) {
             throw new PasswordsDoNotMatchException();
         }
-        if (repository.findByEmail(dto.getEmail()).isPresent()) {
+        if (repository.findByEmail(email).isPresent()) {
             throw new EmailAlreadyTakenException();
         }
-        String token = jwtService.generateToken(dto.getEmail(), dto.getPassword());
+        String encoded = passwordEncoder.encode(password);
+        repository.save(new User(email, encoded));
+        String token = jwtService.generateToken(email, encoded);
         response.addHeader("Authorization", "Bearer " + token);
         response.addCookie(new Cookie("Access-Token", token));
     }
