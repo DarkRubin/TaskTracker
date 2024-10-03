@@ -1,8 +1,10 @@
+version: "3.8"
+
 services:
 
-  postgres:
+  postgresql:
     image: postgres:16.4
-    container_name: postgres
+    container_name: postgresql
     ports:
       - '5433:5432'
     restart: always
@@ -46,6 +48,24 @@ services:
       KAFKA_LISTENERS: "INTERNAL://:29092,EXTERNAL://:9092"
       KAFKA_TOPIC: "EMAIL_SENDING_TASKS"
       ALLOW_PLAINTEXT_LISTENER: "yes"
+    networks:
+      - task-tracker
+
+  backend:
+    build:
+      context: /task-tracker-backend
+      dockerfile: ../task-tracker-backend/Dockerfile
+    container_name: app
+    depends_on:
+      - postgresql
+      - kafka
+    ports:
+      - '8080:8080'
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/tasks-db
+      SPRING_DATASOURCE_USERNAME: ${PG_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${PG_PASSWORD}
+      JWT_KEY: ${TOKEN_KEY}
     networks:
       - task-tracker
 
