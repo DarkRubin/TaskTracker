@@ -11,10 +11,11 @@ import org.roadmap.tasktrackerbackend.exception.PasswordsDoNotMatchException;
 import org.roadmap.tasktrackerbackend.exception.UserNotFoundException;
 import org.roadmap.tasktrackerbackend.model.User;
 import org.roadmap.tasktrackerbackend.repository.UserRepository;
+import org.roadmap.tasktrackerbackend.security.CurrentUserAuthorizationDetails;
 import org.roadmap.tasktrackerbackend.service.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,17 +27,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserRepository repository;
-
     private final JwtService jwtService;
-
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final CurrentUserAuthorizationDetails details;
 
     @GetMapping("/user")
     public User getUser() {
-        return repository.findByEmail(SecurityContextHolder.getContext()
-                        .getAuthentication().getName())
-                .orElseThrow(UserNotFoundException::new);
+        return details.getCurrentUser();
     }
 
     @PostMapping(value = "/user",
@@ -60,9 +58,12 @@ public class UserController {
             consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
     public void login(String email, String password, HttpServletResponse response) {
         var authentication = new UsernamePasswordAuthenticationToken(email, password);
-        authenticationManager.authenticate(authentication);
-        User user = repository.getByEmail(email);
-        String token = jwtService.generateToken(user);
+        try {
+            authenticationManager.authenticate(authentication);
+        } catch (AuthenticationException e) {
+            throw new UserNotFoundException();
+        }
+        String encodedPassword = passwordEncoder.encode(password);
         String token = jwtService.generateToken(email, encodedPassword);
         response.addHeader("Authorization", "Bearer " + token);
         response.addCookie(new Cookie("Access-Token", token));
