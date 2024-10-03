@@ -13,6 +13,17 @@ java {
 	}
 }
 
+bootJar {
+	enabled = true
+}
+
+jar {
+	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+	manifest {
+		attributes 'Main-Class': 'tasktrackerbackend.TaskTrackerBackendApplication'
+	}
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
