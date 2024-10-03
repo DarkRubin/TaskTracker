@@ -1,13 +1,14 @@
-package org.roadmap.tasktrackerbackend.security;
+package org.roadmap.tasktrackerbackend.security.filter;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
+import org.roadmap.tasktrackerbackend.exception.TokenExpiredException;
 import org.roadmap.tasktrackerbackend.service.JwtService;
 import org.roadmap.tasktrackerbackend.service.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,41 +31,37 @@ public class JwtAccessFilter extends OncePerRequestFilter {
     private final UserService userService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain)
-            throws ServletException, IOException {
-        String token;
-        String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith(PREFIX)) {
-            try {
-                token = getTokenFromCookies(request);
-            } catch (NullPointerException e) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-        } else {
-            token = header.substring(PREFIX.length());
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        String method = request.getMethod();
+        if (uri.equals("/user") && method.equals("POST")) {
+            return true;
         }
-        var username = jwtService.extractEmail(token);
-        if (Strings.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails user = userService.loadUserByUsername(username);
-            if (jwtService.isTokenValid(token, user)) {
-                authorize(request, user);
+        return uri.equals("/auth/login");
+    }
+
+    @Override
+    protected void doFilterInternal(@Nonnull HttpServletRequest request,
+                                    @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain)
+            throws ServletException, IOException {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith(PREFIX)) {
+            String token = header.substring(PREFIX.length());
+            try {
+                var username = jwtService.extractEmail(token);
+                if (isNotAuthorized(username)) {
+                    authorize(request, userService.loadUserByUsername(username));
+                }
+            } catch (ExpiredJwtException e) {
+                throw new TokenExpiredException();
             }
+
         }
         filterChain.doFilter(request, response);
     }
 
-    private String getTokenFromCookies(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            throw new NullPointerException();
-        }
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("Access-Token")) {
-                return cookie.getValue();
-            }
-        }
-        throw new NullPointerException();
+    private static boolean isNotAuthorized(String username) {
+        return Strings.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null;
     }
 
     private void authorize(HttpServletRequest request, UserDetails userDetails) {
