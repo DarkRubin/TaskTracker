@@ -51,8 +51,7 @@ public class UserController {
         if (repository.findByEmail(dto.getEmail()).isPresent()) {
             throw new EmailAlreadyTakenException();
         }
-        User user = repository.save(new User(dto.getEmail(), passwordEncoder.encode(dto.getPassword())));
-        String token = jwtService.generateToken(user);
+        String token = jwtService.generateToken(dto.getEmail(), dto.getPassword());
         response.addHeader("Authorization", "Bearer " + token);
         response.addCookie(new Cookie("Access-Token", token));
     }
@@ -64,6 +63,7 @@ public class UserController {
         authenticationManager.authenticate(authentication);
         User user = repository.getByEmail(email);
         String token = jwtService.generateToken(user);
+        String token = jwtService.generateToken(email, encodedPassword);
         response.addHeader("Authorization", "Bearer " + token);
         response.addCookie(new Cookie("Access-Token", token));
     }
