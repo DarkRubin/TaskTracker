@@ -29,7 +29,12 @@ public class TaskController {
 
     @GetMapping("/tasks/finished")
     public List<Task> getFinished() {
-        return repository.getAllFinishedByOwner(details.getCurrentUser());
+        return repository.getAllByOwnerAndFinishedTimeNotNull(details.getCurrentUser());
+    }
+
+    @GetMapping("/tasks/unfinished")
+    public List<Task> getUnfinished() {
+        return repository.getAllByOwnerAndFinishedTimeNull(details.getCurrentUser());
     }
 
     @PostMapping(value = "/task",

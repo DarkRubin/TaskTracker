@@ -4,7 +4,6 @@ import org.roadmap.tasktrackerbackend.exception.TaskNotFoundException;
 import org.roadmap.tasktrackerbackend.model.Task;
 import org.roadmap.tasktrackerbackend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +19,7 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
         return findByUuidAndOwner(id, owner).orElseThrow(TaskNotFoundException::new);
     }
 
-    @Query("from Task where owner =:owner and finishedTime != null")
-    List<Task> getAllFinishedByOwner(User owner);
+    List<Task> getAllByOwnerAndFinishedTimeNull(User owner);
+
+    List<Task> getAllByOwnerAndFinishedTimeNotNull(User owner);
 }
