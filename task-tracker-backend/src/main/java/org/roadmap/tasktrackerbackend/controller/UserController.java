@@ -1,6 +1,5 @@
 package org.roadmap.tasktrackerbackend.controller;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +15,10 @@ import org.roadmap.tasktrackerbackend.service.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,7 +56,6 @@ public class UserController {
         repository.save(new User(email, encoded));
         String token = jwtService.generateToken(email, encoded);
         response.addHeader("Authorization", "Bearer " + token);
-        response.addCookie(new Cookie("Access-Token", token));
     }
 
     @PostMapping(value = "/auth/login",
@@ -70,7 +70,12 @@ public class UserController {
         String encodedPassword = passwordEncoder.encode(password);
         String token = jwtService.generateToken(email, encodedPassword);
         response.addHeader("Authorization", "Bearer " + token);
-        response.addCookie(new Cookie("Access-Token", token));
+    }
+
+    @DeleteMapping("/auth/logout")
+    public void logout(HttpServletResponse response) {
+        response.setHeader("Authorization", "");
+        SecurityContextHolder.clearContext();
     }
 
 }
