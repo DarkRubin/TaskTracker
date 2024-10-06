@@ -69,6 +69,18 @@ services:
     networks:
       - task-tracker
 
+  frontend:
+    build:
+      context: /task-tracker-frontend
+      dockerfile: ../task-tracker-frontend/Dockerfile
+    container_name: frontend
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    networks:
+      - task-tracker
+
 volumes:
   postgres_db:
     name: postgres_db
