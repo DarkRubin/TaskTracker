@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.roadmap.tasktrackerbackend.dto.UserDTO;
 import org.roadmap.tasktrackerbackend.exception.EmailAlreadyTakenException;
 import org.roadmap.tasktrackerbackend.exception.InvalidUserDetailsException;
-import org.roadmap.tasktrackerbackend.exception.PasswordsDoNotMatchException;
 import org.roadmap.tasktrackerbackend.exception.UserNotFoundException;
 import org.roadmap.tasktrackerbackend.model.User;
 import org.roadmap.tasktrackerbackend.repository.UserRepository;
@@ -21,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,29 +38,26 @@ public class UserController {
         return details.getCurrentUser();
     }
 
-    @PostMapping(value = "/user",
-            consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
-    public void registerUser(@Valid UserDTO dto, BindingResult bindingResult, HttpServletResponse response) {
+    @PostMapping(value = "/user", consumes = "application/*")
+    public void registerUser(@Valid @RequestBody UserDTO dto, BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             throw new InvalidUserDetailsException();
         }
-        String email = dto.getEmail();
-        String password = dto.getPassword();
-        if (!password.equals(dto.getConfirmPassword())) {
-            throw new PasswordsDoNotMatchException();
-        }
+        String email = dto.email();
+        String password = dto.password();
         if (repository.findByEmail(email).isPresent()) {
             throw new EmailAlreadyTakenException();
         }
         String encoded = passwordEncoder.encode(password);
         repository.save(new User(email, encoded));
         String token = jwtService.generateToken(email, encoded);
-        response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader("Authorization", token);
     }
 
-    @PostMapping(value = "/auth/login",
-            consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
-    public void login(String email, String password, HttpServletResponse response) {
+    @PostMapping(value = "/auth/login", consumes = "application/*")
+    public void login(@RequestBody UserDTO userDTO, HttpServletResponse response) {
+        String email = userDTO.email();
+        String password = userDTO.password();
         var authentication = new UsernamePasswordAuthenticationToken(email, password);
         try {
             authenticationManager.authenticate(authentication);
@@ -69,7 +66,7 @@ public class UserController {
         }
         String encodedPassword = passwordEncoder.encode(password);
         String token = jwtService.generateToken(email, encodedPassword);
-        response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader("Authorization", token);
     }
 
     @DeleteMapping("/auth/logout")
