@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Task tracker</title>
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
   <script src="js/bootstrap.bundle.js"></script>
   <script src="js/bootstrap.js"></script>
   <script src="js/jquery-3.7.1.js"></script>
@@ -16,113 +17,178 @@
       <div class="col-6">
         <h1>Task tracker</h1>
       </div>
-      <div class="col-6 text-center">
-        <button class="col-3 btn btn-primary" id="loginButton">Login</button>
-        <button class="col-3 btn btn-primary" id="signInButton">Sign-in</button>
+      <div class="col-6 text-center" id="auth-buttons">
+        <button class="col-3 btn btn-primary text-nowrap" id="login-button">Login</button>
+        <button class="col-3 btn btn-primary text-nowrap" id="sign-up-button">Sign-up</button>
+      </div>
+      <div class="col-6 text-center" id="logout-buttons">
+        <h5 class="col-3 text-nowrap" id="username">Username</h5>
+        <button id="logout-button" class="col-3 btn btn-danger text-nowrap" >Logout</button>
       </div>
     </div>
-
   </header>
-  <main class="container">
+<hr>
+<br>
+  <main class="container content">
+    <div class="row">
+      <div class="col-4">
+        <h2 class="text-center">Planes</h2>
+        <ul class="list-group" id="planed-tasks">
+          <li class="list-group-item">
+            <div class="col-9">
+              <h4 class="task-name">Task</h4>
+              <p class="task-text">Long and detail task description</p>
+            </div>
+            <button type="button" class="col-3 btn btn-primary finish-btn">Finish</button>
+          </li>
+        </ul>
+      </div>
+      <div class="col-4" id="current-task">
+
+      </div>
+      <div class="col-4">
+        <h2 class="text-center">Finished</h2>
+        <ul class="list-group" id="finished-tasks">
+          <li class="list-group-item">
+            <h4 class="task-name">Task</h4>
+            <p class="task-text">Long and detail task description</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <section>
+      <h2 class="text-center">Motivation</h2>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <h4 class="text-center" id="quote">Just do it</h4>
+          <h6 class="text-center text-secondary" id="author">-Shia LaBeouf</h6>
+        </li>
+      </ul>
+    </section>
   </main>
-<div id="signInModal" tabindex="-1" class="modal fade">
+<div id="sign-up-modal" tabindex="-1" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header align-self-center">
         <h2 class="text-center">Registration</h2>
       </div>
-      <form id="signIn" class="form-floating">
+      <form id="sign-up" class="form-floating">
         <div class="modal-body row">
           <div class="col-3"></div>
           <div class="col-6">
             <label class="form-label fw-bolder">Email
-              <input class="form-control" type="email" name="email" required>
+              <input id="sign-up-email" class="form-control" type="email" name="email" required>
             </label>
           </div>
           <div class="col-3"></div>
           <div class="col-sm-3"></div>
           <div class="col-sm-6">
-            <p id="signInEmailError" class="text-danger"></p>
+            <p id="sign-up-email-error" class="text-danger"></p>
           </div>
           <div class="col-sm-3"></div>
           <div class="col-3"></div>
           <div class="col-6">
             <label class="form-label fw-bolder">Password
-              <input class="form-control" type="password" name="password" required>
+              <input id="sign-up-password" class="form-control" type="password" name="password" required>
             </label>
           </div>
           <div class="col-3"></div>
           <div class="col-sm-3"></div>
           <div class="col-sm-6">
-            <p id="signInPasswordError" class="text-danger"></p>
+            <p id="sign-up-password-error" class="text-danger"></p>
           </div>
           <div class="col-sm-3"></div>
           <div class="col-3"></div>
           <div class="col-6">
             <label class="form-label fw-bolder">Confirm password
-              <input class="form-control" type="password" name="confirmPassword" required>
+              <input id="sign-up-confirmPassword" class="form-control" type="password" name="confirmPassword" required>
             </label>
           </div>
           <div class="col-3"></div>
           <div class="col-3"></div>
           <div class="col-6">
-            <p id="signInError" class="text-danger"></p>
+            <p id="sign-up-error" class="text-danger"></p>
           </div>
           <div class="col-3"></div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Send</button>
-          <button type="button" id="close-modal-btn-signin" class="btn btn-danger">Close</button>
+          <button type="submit" id="submit-sign-up" class="btn btn-primary">Send</button>
+          <button type="button" id="close-modal-btn-sign-up" class="btn btn-danger">Close</button>
         </div>
       </form>
     </div>
   </div>
 </div>
-  <div id="loginModal" tabindex="-1" class="modal fade">
+  <div id="login-modal" tabindex="-1" class="modal fade">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header align-self-center">
           <h2 class="text-center">Authorization</h2>
         </div>
-        <form class="form-floating">
+        <form class="form-floating" id="login">
           <div class="modal-body row">
             <div class="col-3"></div>
             <div class="col-6">
               <label class="form-label fw-bolder">Email
-                <input class="form-control" type="email" name="email" required>
+                <input id="login-email" class="form-control" type="email" name="email" required>
               </label>
             </div>
             <div class="col-3"></div>
             <div class="col-sm-3"></div>
             <div class="col-sm-6">
-              <p id="loginEmailError" class="text-danger"></p>
+              <p id="login-email-error" class="text-danger"></p>
             </div>
             <div class="col-sm-3"></div>
             <div class="col-3"></div>
             <div class="col-6">
               <label class="form-label fw-bolder">Password
-                <input class="form-control" type="password" name="password" required>
+                <input id="login-password" class="form-control" type="password" name="password" required>
               </label>
             </div>
             <div class="col-3"></div>
             <div class="col-sm-3"></div>
             <div class="col-sm-6">
-              <p id="loginPasswordError" class="text-danger"></p>
+              <p id="login-password-error" class="text-danger"></p>
             </div>
             <div class="col-sm-3"></div>
             <div class="col-sm-3"></div>
             <div class="col-sm-6">
-              <p id="loginError" class="text-danger"></p>
+              <p id="login-error" class="text-danger"></p>
             </div>
             <div class="col-sm-3"></div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Send</button>
+            <button type="submit" id="submit-login" class="btn btn-primary">Send</button>
             <button type="button" id="close-modal-btn-login" class="btn btn-danger">Close</button>
           </div>
         </form>
       </div>
     </div>
   </div>
+
+  <div id="logout-modal" tabindex="-1" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header align-self-center">
+          <h2 class="text-center">Logout</h2>
+        </div>
+        <form id="logout" class="form-floating">
+          <div class="modal-body row">
+            <div class="col-3"></div>
+            <div class="col-6">
+              <h2 class="text-center">Are you sure want to logout?</h2>
+            </div>
+            <div class="col-3"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" id="logout-confirm" class="btn btn-primary">Logout</button>
+            <button type="button" id="close-modal-btn-logout" class="btn btn-danger">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
 </body>
 </html>
