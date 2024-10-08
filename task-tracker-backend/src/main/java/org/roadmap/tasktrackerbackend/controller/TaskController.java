@@ -1,6 +1,8 @@
 package org.roadmap.tasktrackerbackend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.roadmap.tasktrackerbackend.dto.TaskDTO;
+import org.roadmap.tasktrackerbackend.mapper.TaskMapper;
 import org.roadmap.tasktrackerbackend.model.Task;
 import org.roadmap.tasktrackerbackend.repository.TaskRepository;
 import org.roadmap.tasktrackerbackend.security.CurrentUserAuthorizationDetails;
@@ -8,11 +10,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class TaskController {
     private final TaskRepository repository;
 
     private final CurrentUserAuthorizationDetails details;
+    private final TaskMapper taskMapper;
 
     @GetMapping("/tasks")
     public List<Task> getAll() {
@@ -37,41 +41,45 @@ public class TaskController {
         return repository.getAllByOwnerAndFinishedTimeNull(details.getCurrentUser());
     }
 
-    @PostMapping(value = "/task",
-            consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
-    public Task add(String title, String text) {
-        return repository.save(new Task(title, text, details.getCurrentUser()));
+    @PostMapping("/task")
+    public Task add(@RequestBody TaskDTO dto) {
+        Task newTask = taskMapper.toEntity(dto);
+        newTask.setOwner(details.getCurrentUser());
+        return repository.save(newTask);
     }
 
-    @DeleteMapping(value = "/task",
-            consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
-    public void delete(UUID uuid) {
-        repository.delete(repository.getTaskByUuidAndOwnerOrThrow(uuid, details.getCurrentUser()));
+    @DeleteMapping("/task")
+    public void delete(@RequestBody TaskDTO dto) {
+        repository.delete(repository.getTaskByUuidAndOwnerOrThrow(dto.uuid(), details.getCurrentUser()));
     }
 
-    @PatchMapping(value = "/task/title",
-            consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
-    public Task updateTitle(UUID uuid, String newTitle) {
-        Task task = repository.getTaskByUuidAndOwnerOrThrow(uuid, details.getCurrentUser());
-        task.setTitle(newTitle);
+    @PutMapping("/task")
+    public Task update(@RequestBody TaskDTO dto) {
+        Task task = taskMapper.toEntity(dto);
+        task.setOwner(details.getCurrentUser());
         return repository.save(task);
     }
 
-    @PatchMapping(value = "/task/text",
-            consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
-    public Task updateText(UUID uuid, String newText) {
-        Task task = repository.getTaskByUuidAndOwnerOrThrow(uuid, details.getCurrentUser());
-        task.setText(newText);
+    @PatchMapping("/task/title")
+    public Task updateTitle(@RequestBody TaskDTO dto) {
+        Task task = repository.getTaskByUuidAndOwnerOrThrow(dto.uuid(), details.getCurrentUser());
+        task.setTitle(dto.title());
         return repository.save(task);
     }
 
-    @PatchMapping(value = "/task/finish",
-            consumes = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json"})
-    public Task finish(UUID uuid) {
-        Task task = repository.getTaskByUuidAndOwnerOrThrow(uuid, details.getCurrentUser());
+    @PatchMapping("/task/text")
+    public Task updateText(@RequestBody TaskDTO dto) {
+        Task task = repository.getTaskByUuidAndOwnerOrThrow(dto.uuid(), details.getCurrentUser());
+        task.setText(dto.text());
+        return repository.save(task);
+    }
+
+    @PatchMapping("/task/finish")
+    public Task finish(@RequestBody TaskDTO dto) {
+        Task task = repository.getTaskByUuidAndOwnerOrThrow(dto.uuid(),
+                details.getCurrentUser());
         task.setFinishedTime(Instant.now());
         return repository.save(task);
     }
-
 
 }
