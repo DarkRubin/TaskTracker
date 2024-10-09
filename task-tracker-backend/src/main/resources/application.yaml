@@ -1,13 +1,18 @@
 spring:
+  liquibase:
+    enabled: true
+
+  config:
+    import: optional:file:resources/.env[.properties]
   application:
     name: task-tracker-backend
   datasource:
     url: jdbc:postgresql://127.0.0.1:5433/tasks-db
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     open-in-view: false
 jwt:
-  key: ${TOKEN_KEY}
+  key: ${JWT_KEY}
