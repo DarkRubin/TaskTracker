@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-tasks
+      author: Vadim
+      changes:
+        - createTable:
+            tableName: tasks
+            columns:
+              - column:
+                   name: uuid
+                   type: uuid
+                   autoIncrement: false
+                   constraints:
+                     primaryKey: true
+                     nullable: false
+              - column:
+                  name: title
+                  type: varchar(100)
+              - column:
+                  name: text
+                  type: text
+              - column:
+                  name: finished_time
+                  type: timestamp(6) with time zone
+              - column:
+                  name: owner
+                  type: integer
+                  constraints:
+                    foreignKeyName: id

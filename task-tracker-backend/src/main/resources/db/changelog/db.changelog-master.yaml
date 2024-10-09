@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/create-table-users.yaml
+  - include:
+      file: db/changelog/changeset/create-table-tasks.yaml
+  - include:
+      file: db/changelog/changeset/add-column-do-before-to-tasks.yaml
+  - include:
+      file: db/changelog/changeset/change-columns-timestamp-down-accuracy.yaml

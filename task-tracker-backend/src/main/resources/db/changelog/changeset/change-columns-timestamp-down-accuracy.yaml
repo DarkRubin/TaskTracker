@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: down-do-before-and-finished-time-columns-timestamp-accuracy
+      author: Vadim
+      changes:
+        - modifyDataType:
+            tableName: tasks
+            columnName: do_before
+            newDataType: timestamp(0) with time zone
+        - modifyDataType:
+            tableName: tasks
+            columnName: finished_time
+            newDataType: timestamp(0) with time zone

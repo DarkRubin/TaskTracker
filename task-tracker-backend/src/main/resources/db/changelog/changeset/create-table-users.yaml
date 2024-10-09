@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-users
+      author: vadim
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(320)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(80)
+                  constraints:
+                    nullable: false

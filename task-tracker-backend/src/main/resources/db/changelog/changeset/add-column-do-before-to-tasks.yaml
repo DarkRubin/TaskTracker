@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-column-do-before
+      author: Vadim
+      changes:
+        - addColumn:
+            tableName: tasks
+            columns:
+              - column:
+                  name: do_before
+                  type: timestamp(6) with time zone
+                  constraints:
+                    nullable: true
