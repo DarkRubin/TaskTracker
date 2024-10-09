@@ -12,6 +12,8 @@ services:
       POSTGRES_USER: ${PG_USERNAME}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: tasks-db
+    volumes:
+      - postgres_db:/usr/pg/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${PG_USERNAME}" ]
       interval: 20s
@@ -83,7 +85,7 @@ services:
 
 volumes:
   postgres_db:
-    name: postgres_db
+    driver: local
 
 networks:
   task-tracker:
