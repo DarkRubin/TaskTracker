@@ -45,6 +45,9 @@ public class Task {
     @Column(name = "finished_time")
     private Instant finishedTime;
 
+    @Column(name = "do_before")
+    private Instant doBefore;
+
     public Task(String title, String text, User owner) {
         this.title = title;
         this.text = text;
