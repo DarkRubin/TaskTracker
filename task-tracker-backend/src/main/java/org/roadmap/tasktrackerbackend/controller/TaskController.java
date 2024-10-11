@@ -2,6 +2,7 @@ package org.roadmap.tasktrackerbackend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.roadmap.tasktrackerbackend.dto.TaskDTO;
+import org.roadmap.tasktrackerbackend.exception.InvalidDateParameterException;
 import org.roadmap.tasktrackerbackend.mapper.TaskMapper;
 import org.roadmap.tasktrackerbackend.model.Task;
 import org.roadmap.tasktrackerbackend.repository.TaskRepository;
@@ -9,13 +10,17 @@ import org.roadmap.tasktrackerbackend.security.CurrentUserAuthorizationDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,6 +44,17 @@ public class TaskController {
     @GetMapping("/tasks/unfinished")
     public List<Task> getUnfinished() {
         return repository.getAllByOwnerAndFinishedTimeNull(details.getCurrentUser());
+    }
+
+    @GetMapping("/tasks/unfinished/{date}")
+    public List<Task> getUnfinishedByDate(@PathVariable String date) {
+        try {
+            Instant from = Instant.parse(date);
+            Instant to = from.plus(1, DAYS);
+            return repository.getAllByOwnerAndFinishedTimeBetween(details.getCurrentUser(), from, to);
+        } catch (DateTimeParseException e) {
+            throw new InvalidDateParameterException();
+        }
     }
 
     @PostMapping("/task")
