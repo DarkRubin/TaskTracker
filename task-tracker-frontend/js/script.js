@@ -1,14 +1,21 @@
 $(document).ready(function () {
-    
+
+
     const host = "http://localhost:8080"
-    
+
     //modals
     const signUpModal = bootstrap.Modal.getOrCreateInstance('#sign-up-modal');
     const loginModal = bootstrap.Modal.getOrCreateInstance('#login-modal');
     const logoutModal = bootstrap.Modal.getOrCreateInstance('#logout-modal');
+    const editTaskModal = bootstrap.Modal.getOrCreateInstance('#edit-modal');
 
-    let jwtToken;
-    
+    const newTaskLi = $('#add-task-li');
+    const calendarLi = $('#calendar-li');
+    const unfinishedTasksButtons = $('.task-buttons');
+    const finishedTasksButtons = $('.task-buttons-finished');
+
+    let jwtToken = null;
+
     //headers
     const contentTypeHeader = {
         "Content-Type": "application/json"
@@ -21,7 +28,7 @@ $(document).ready(function () {
 
     //regex for email validation
     const regex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    
+
     let email;
 
     const logoutButtons = $('#logout-buttons');
@@ -30,15 +37,19 @@ $(document).ready(function () {
     if (jwtToken == null) {
         jwtToken = sessionStorage.getItem("jwtToken");
     }
-    
+
     function updateJwtHeader() {
         if (jwtToken != null) {
             authHeader = {
                 "Authorization": `Bearer ${jwtToken}`
             }
+            multiHeader = {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + jwtToken
+            }
         }
     }
-    
+
     updateJwtHeader();
 
     function loadContent() {
@@ -62,73 +73,230 @@ $(document).ready(function () {
     }
 
     loadContent();
-    
+
     function loadTasks() {
+        loadFinishedTasks();
+        loadUnfinishedTasks()
+    }
+    
+    function loadFinishedTasks() {
         fetch(`${host}/tasks/finished`, {
             headers: authHeader
         }).then(
             (response) => response.json().then(
-                (tasks) => showTasks($('#finished-tasks'), tasks)
+                (tasks) => showTasks(tasks, $('#finished-tasks').empty().append(calendarLi), true)
             )
         ).catch(() => alert("Error"));
-        
+    }
+    
+    function loadUnfinishedTasks() {
         fetch(`${host}/tasks/unfinished`, {
             headers: authHeader
         }).then(
             (response) => response.json().then(
-                (tasks) => showTasks($('#planed-tasks'), tasks)
+                (tasks) => showTasks(tasks, $('#planed-tasks').empty().append(newTaskLi), false)
             ),
         ).catch(() => alert("Error"));
-        
-        function showTasks(list, tasks) {
-            console.log("List element:", list);
-            console.log("Tasks:", tasks);
-            list.empty();
-            $.each(tasks, (index, task) => {
-                console.log("Processing task:", task);
-                
-                const li = $("<li></li>");
-                const div = $("<div></div>");
-                li.addClass("list-group-item");
-                div.addClass("col-9");
-                li.append($('<p></p>').text(task.uuid).hide());
-                div.append($('<h4></h4>').text(task.title));
-                div.append($('<p></p>').text(task.text));
-                if (task.finishedTime != null) {
-                    div.append($('<p></p>').text(`Finished at ${task.finishedTime}`));
-                } else {
-                    li.append($('<button></button>').addClass("col-3 btn btn-primary finish-btn")
-                        .text("Finish"))
-                }
-                li.append(div);
-
-                list.append(li);
-                
-                console.log("Added task to list:", li);
-            });
-            console.log("Final list element:", list);
-        }
     }
     
-    $('.finish-btn').on("click", () => {
-        event.stopPropagation();
-        event.stopImmediatePropagation();
+    function showTasks(tasks, list, tasksFinished) {
+        $.each(tasks, (index, task) => {
+            const li = $("<li></li>");
+            const row = $("<div class='row'></div>");
+            row.append($('<div class="col-1"></div>'));
+            const div = $("<div class='col-8'></div>");
+            li.addClass("list-group-item");
+            div.append($('<p></p>').text(task.uuid).addClass("uuid visually-hidden"));
+            div.append($('<h4 class="task-title"></h4>').text(task.title));
+            div.append($('<p class="task-text"></p>').text(task.text));
+            let doBefore = task.doBefore;
+            if (doBefore != null) {
+                let date = doBefore.substring(doBefore.indexOf("T") + 1, doBefore.length - 4);
+                if (Date.parse(doBefore) < Date.now()) {
+                    div.append($('<p class="task-do-before text-danger"></p>').text(date));
+                } else {
+                    div.append($('<p class="task-do-before"></p>').text(date));
+                }
+            }
+            let finishedTime = task.finishedTime;
+            if (finishedTime != null) {
+                finishedTime = finishedTime.substring(finishedTime.indexOf("T") + 1, finishedTime.length - 1);
+                div.append($('<p class="task-finish-time"></p>').text(finishedTime));
+            }
+            row.append(div);
+            if (tasksFinished) {
+                row.append(finishedTasksButtons.clone());
+            } else{
+                row.append(unfinishedTasksButtons.clone());
+            }
+            row.append($('<div class="col-1"></div>'));
+            li.append(row);
+            list.append(li);
+        });
+    }
+
+    $(document).on("click", ".finish-btn", function (e) {
+        e.stopPropagation();
+        if (isNotAuthorized()) {
+            loginModal.show();
+            return;
+        }
+        const uuid = $(this).closest('.row').find('.uuid').text();
         fetch(`${host}/task/finish`, {
-            method: 'POST',
+            method: 'PATCH',
             headers: multiHeader,
             body: `{
-                "uuid": "${$(this).parent().find("p").text()}"
+                "uuid": "${uuid}"
             }`
         }).then(response => {
             response.ok ? loadTasks() : alert("Error");
-        })
-    })
+        });
+    });
+
+    $(document).on("click", '#add-task-submit', function (e) {
+        e.preventDefault();
+        const title = $('#task-title').val();
+        if (title === "") {
+            alert("Title cannot be empty");
+            return;
+        }
+        if (isNotAuthorized()) {
+            loginModal.show();
+            return;
+        }
+        let doBefore = $('#task-do-before').val();
+        if (doBefore !== null && doBefore !== undefined && doBefore !== "") {
+            doBefore = new Date().setHours(parseInt(doBefore.substring(0, doBefore.indexOf(":"))),
+                parseInt(doBefore.substring(doBefore.indexOf(":") + 1, doBefore.length)));
+            let currentDate = new Date();
+            currentDate.setTime(doBefore);
+            doBefore = currentDate.toISOString();
+        }
+        fetch(`${host}/task`, {
+            method: 'POST',
+            headers: multiHeader,
+            body: `{
+                "title": "${title}",
+                "text": "${$('#task-text').val()}",
+                "doBefore": "${doBefore}"
+            }`
+        }).then(response =>
+        response.ok ? loadTasks() : response.json().then(errorInfo => {alert(errorInfo.message)}));
+    });
+
+    $(document).on("click", '.edit-btn', function (e) {
+        e.stopPropagation();
+        if (isNotAuthorized()) {
+            loginModal.show();
+            return;
+        }
+        $('#edit-task-uuid').val($(this).closest('.row').find('.uuid').text())
+        $('#edit-task-title').val($(this).closest('.row').find('.task-title').text());
+        $('#edit-task-text').val($(this).closest('.row').find('.task-text').text());
+        $('#edit-task-do-before').val($(this).closest('.row').find('.task-do-before').text());
+        $('#edit-task-finished-time').val($(this).closest('.row').find('.task-finish-time').text());
+
+        editTaskModal.show();
+    });
+
+    $('#submit-edit').on("click", function (e) {
+        e.preventDefault();
+        fetch(`${host}/task`, {
+            method: 'PUT',
+            headers: multiHeader,
+            body: `{
+                "uuid": "${$('#edit-task-uuid').val()}",
+                "title": "${$('#edit-task-title').val()}",
+                "text": "${$('#edit-task-text').val()}",
+                "doBefore": "${$('#edit-task-do-before').val()}",
+                "finishedTime": "${$('#edit-task-finished-time').val()}"
+            }`
+        }).then(response => {
+            if (response.ok) {
+                loadTasks();
+                editTaskModal.hide();
+            } else {
+                response.json().then(errorInfo => {
+                    $('#edit-task-error').text(errorInfo.message);
+                });
+            }
+        });
+    });
+
+    $(document).on("click", '.continue-btn', function (e) {
+        e.preventDefault();
+        if (isNotAuthorized()) {
+            loginModal.show();
+            return;
+        }
+        const uuid = $(this).closest('.row').find('.uuid').text();
+        fetch(`${host}/task/continue`, {
+            method: 'PATCH',
+            headers: multiHeader,
+            body: `{
+                "uuid": "${uuid}"
+            }`
+        }).then(response => {
+            response.ok ? loadTasks() : handleError(response);
+        });
+    });
+
+    
+    $(document).on("click", '.delete-btn', function (e) {
+        e.preventDefault();
+        if (isNotAuthorized()) {
+            loginModal.show();
+            return;
+        }
+        fetch(`${host}/task`, {
+            method: 'DELETE',
+            headers: multiHeader,
+            body: `{
+                "uuid": "${$(this).closest('.row').find('.uuid').text()}"
+            }`
+        }).then(response => {
+            if (response.ok) {
+                loadTasks();
+                editTaskModal.hide();
+            } else {
+                handleError(response.json());
+            }
+        });
+    });
+    
+    $('#delete-modal').on("click", function (e) {
+        e.preventDefault();
+        if (isNotAuthorized()) {
+            loginModal.show();
+            return;
+        }
+        fetch(`${host}/task`, {
+            method: 'DELETE',
+            headers: multiHeader,
+            body: `{
+                "uuid": "${$('#edit-task-uuid').val()}"
+            }`
+        }).then(response => {
+            if (response.ok) {
+                loadTasks();
+                editTaskModal.hide();
+            } else {
+                response.json().then(() => {
+                    $('#edit-task-error').text("Cannot delete task");
+                });
+            }
+        });
+    });
+    function isNotAuthorized() {
+        return multiHeader.Authorization === "Bearer null";
+
+    }
 
     let incorrect = false;
 
-    $('#login-password').on("change", function () {
+    $('#sign-up-password').on("change", function () {
         const password = $(this).val();
-        const passwordError = $('#login-password-error');
+        const passwordError = $('#sign-up-password-error');
         if (password.length < 8) {
             passwordError.text("Minimum password length 8 characters");
             incorrect = true;
@@ -143,43 +311,81 @@ $(document).ready(function () {
             incorrect = true;
         } else incorrect = false;
     }); //TODO
-
+    $(document).on("click", '#do-before-checkbox', () => {
+        if ($('#do-before-checkbox').val()) {
+            $('#task-do-before').removeAttr("disabled")
+        } else {
+            $('#task-do-before').attr("disabled", "disabled");
+        }
+        
+    });
     $('#sign-up-button').on("click", () => signUpModal.show());
     $('#login-button').on("click", () => loginModal.show());
     $('#logout-button').on("click", () => logoutModal.show());
     $('#close-modal-btn-sign-up').on("click", () => signUpModal.hide());
     $('#close-modal-btn-login').on("click", () => loginModal.hide());
     $('#close-modal-btn-logout').on("click", () => logoutModal.hide());
+    $('#close-modal-btn-edit').on("click", () => editTaskModal.hide());
+    $('#move-to-sign-up').on("click", () => {
+        loginModal.hide();
+        signUpModal.show();
+    });
+    $('#move-to-login').on("click", () => {
+        signUpModal.hide();
+        loginModal.show();
+    });
+    $(document).on("click", '#calendar-btn', function (e) {
+        e.preventDefault();
+        let date = $('#calendar-date').val();
+        if (isNotAuthorized()) {
+            loginModal.show();
+            return;
+        }
+        if (date === "") {
+            loadFinishedTasks();
+            return;
+        }
+        date = date + "T00:00:00.000Z";
+        fetch(`${host}/tasks/unfinished/${date}`, {
+            method: 'GET',
+            headers: multiHeader
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(tasks => {
+                    showTasks(tasks, $('#finished-tasks').empty().append(calendarLi), true);
+                });
+            } else alert(response.json().then(message => message.message));
+        })
+    });
 
     $('#sign-up').on("submit", function (e) {
-            e.preventDefault();
-            fetch(`${host}/user`, {
-                method: 'POST',
-                headers: contentTypeHeader,
-                body: `{
+        e.preventDefault();
+        if (incorrect) return;
+        fetch(`${host}/user`, {
+            method: 'POST',
+            headers: contentTypeHeader,
+            body: `{
                     "email": "${$('#sign-up-email').val()}",
                     "password": "${$('#sign-up-password').val()}",
                     "firstName": "${$('#sign-up-confirmPassword').val()}"
                 }`
-            }).then(response => {
-                if (!response.ok) {
-                    response.json().then(errorInfo => {
-                        $('#sign-up-error').text(errorInfo.message);
-                    });
-                } else {
-                    jwtToken = response.headers.get('Authorization');
-                    localStorage.setItem("jwtToken", jwtToken);
-                    signUpModal.hide();
-                    updateJwtHeader();
-                    loadContent();
-                }
-            })
-        });
+        }).then(response => {
+            if (!response.ok) {
+                response.json().then(errorInfo => {
+                    $('#sign-up-error').text(errorInfo.message);
+                });
+            } else {
+                jwtToken = response.headers.get('Authorization');
+                localStorage.setItem("jwtToken", jwtToken);
+                signUpModal.hide();
+                updateJwtHeader();
+                loadContent();
+            }
+        })
+    });
 
     $('#login').on("submit", function (e) {
-        if (incorrect) return;
         e.preventDefault();
-        
         fetch(`${host}/auth/login`, {
             method: 'POST',
             headers: contentTypeHeader,
@@ -202,14 +408,14 @@ $(document).ready(function () {
             loadContent();
         });
     });
-    
+
     $('#logout').on("submit", function (e) {
         e.preventDefault();
         fetch(`${host}/auth/logout`, {
-            method: 'POST',
+            method: 'DELETE',
             headers: authHeader
         }).then(response => {
-            if (!response.ok) {
+            if (response.ok) {
                 sessionStorage.removeItem("jwtToken");
                 jwtToken = null;
                 authHeader = null;
@@ -218,19 +424,45 @@ $(document).ready(function () {
             }
         });
     });
-    
-    function showDefaultContent () {
+
+    function showDefaultContent() {
         $('#auth-buttons').show();
         logoutButtons.hide();
-        let unfinishedTasks = $('#unfinished-tasks');
-        unfinishedTasks.empty();
-        $('#finished-tasks').empty();
-        let li = $("<li></li>")
-        li.addClass("list-group-item");
-        li.append($('<h4></h4>').text("Lets start!"));
-        li.append($('<p></p>').text("Sing up or login to see your tasks"));
-        unfinishedTasks.append();
-        unfinishedTasks.show();
+        let unfinishedTasks = $('#planed-tasks');
+        unfinishedTasks.empty().append(newTaskLi);
+        let finishedTasks = $('#finished-tasks');
+        finishedTasks.empty().append(calendarLi);
+        showTasks([
+            {
+                uuid: "1",
+                title: "Log in or Sign-up",
+                text: "For enable all features you need to lod in or sign-up",
+                finishedTime: null,
+            }
+        ], unfinishedTasks, false);
     }
     
+    function handleError(error) {
+        error.json().then(errorInfo => {
+            const message = errorInfo.message;
+            if (message === "Authentication token is expired, login for get new token" || 
+                message === "Invalid JWT token") {
+                updateJwtHeader();
+            }
+            if (message === "User not found" || 
+                message === "User not authorized or token is expired") {
+                showDefaultContent();
+                loginModal.show();
+            } else {
+                alert(message);
+            }
+        });
+    }
+    
+    
+    function updateJwtToken() {
+        
+        
+    }
+
 });

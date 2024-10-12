@@ -1,3 +1,8 @@
 .btn-success {
     --bs-btn-bg: #1fbf25;
 }
+
+.scroll-section {
+    height: 34rem;
+    overflow-y: scroll;
+}

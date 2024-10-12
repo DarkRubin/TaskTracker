@@ -3,191 +3,320 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Task tracker</title>
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <script src="js/bootstrap.bundle.js"></script>
-  <script src="js/bootstrap.js"></script>
-  <script src="js/jquery-3.7.1.js"></script>
-  <script src="js/script.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<script src="js/bootstrap.js" type="module"></script>
+	<script src="js/bootstrap.bundle.js" type="module"></script>
+	<script src="js/jquery-3.7.1.js" type="module"></script>
+	<script src="js/script.js" type="module"></script>
 </head>
 <body>
 <br>
-  <header class="container">
-    <div class="row">
-      <div class="col-6">
-        <h1>Task tracker</h1>
-      </div>
-      <div class="col-6 text-center" id="auth-buttons">
-        <button class="col-3 btn btn-primary text-nowrap" id="login-button">Login</button>
-        <button class="col-3 btn btn-primary text-nowrap" id="sign-up-button">Sign-up</button>
-      </div>
-      <div class="col-6 text-center" id="logout-buttons">
-        <h5 class="col-3 text-nowrap" id="username">Username</h5>
-        <button id="logout-button" class="col-3 btn btn-danger text-nowrap" >Logout</button>
-      </div>
-    </div>
-  </header>
+<header class="container">
+	<div class="row">
+		<div class="col-6">
+			<h1>Task tracker</h1>
+		</div>
+		<div class="col-6 text-center mt-2" id="auth-buttons">
+			<button class="col-3 btn btn-primary text-nowrap" id="login-button">Login</button>
+			<button class="col-3 btn btn-primary text-nowrap" id="sign-up-button">Sign-up</button>
+		</div>
+		<div class="col-6" id="logout-buttons">
+			<div class="row">
+				<div class="col-3"></div>
+				<h5 class="text-nowrap col-5 mt-2" id="username">Username</h5>
+				<button id="logout-button" class="col-3 btn btn-danger text-nowrap mt-1">Logout</button>
+			</div>
+		</div>
+	</div>
+</header>
 <hr>
 <br>
-  <main class="container content">
-    <div class="row">
-      <div class="col-4">
-        <h2 class="text-center">Planes</h2>
-        <ul class="list-group" id="planed-tasks">
-          <li class="list-group-item">
-            <div class="col-9">
-              <h4 class="task-name">Task</h4>
-              <p class="task-text">Long and detail task description</p>
-            </div>
-            <button type="button" class="col-3 btn btn-primary finish-btn">Finish</button>
-          </li>
-        </ul>
-      </div>
-      <div class="col-4" id="current-task">
+<div class="container content">
+	<div class="row">
+		<div class="col-5">
+			<h2 class="text-center">Plans</h2>
+			<ul class="list-group scroll-section" id="planed-tasks">
+				<li class="list-group-item" id="add-task-li">
+					<h4 class="text-center">New task</h4>
+					<div class="row">
+						<div class="col-1"></div>
+						<form id="add-task" class="col-10">
+							<label class="form-label">Task name
+								<input id="task-title" class="form-control" type="text" name="taskTitle" required>
+							</label>
+							<label class="form-label ms-5">Do before
+								<input type="checkbox" id="do-before-checkbox" name="doBeforeCheckbox" value="true">
+								<input id="task-do-before" disabled class="form-control" type="time" name="doBefore">
+							</label>
+							<label class="form-label">Task description
+								<input id="task-text" class="form-control" type="text" name="taskText" placeholder="Task description">
+							</label>
+							<button type="submit" id="add-task-submit" class="btn btn-primary ms-5 mb-1 border-black">Add</button>
+							<div class="col-1"></div>
+						</form>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row">
+						<div class="col-1"></div>
+						<div class="col-9">
+							<p class="visually-hidden uuid">value</p>
+							<h4 class="task-title">Task</h4>
+							<p class="task-text">Long and detail task description</p>
+						</div>
+						<div class="col-2 task-buttons">
+							<button type="button" class="btn btn-success border-black finish-btn">✔</button>
+							<button type="button" class="btn btn-primary border-black mt-1 edit-btn">✏</button>
+						</div>
+						<div class="col-1"></div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="col-2" id="current-task">
+			<h2 class="text-center">Focus</h2>
+			<ul class="list-group">
+				<li class="list-group-item">
+					<h4 class="text-center">Time to work</h4>
+					<div>
 
-      </div>
-      <div class="col-4">
-        <h2 class="text-center">Finished</h2>
-        <ul class="list-group" id="finished-tasks">
-          <li class="list-group-item">
-            <h4 class="task-name">Task</h4>
-            <p class="task-text">Long and detail task description</p>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <section>
-      <h2 class="text-center">Motivation</h2>
-      <ul class="list-group">
-        <li class="list-group-item">
-          <h4 class="text-center" id="quote">Just do it</h4>
-          <h6 class="text-center text-secondary" id="author">-Shia LaBeouf</h6>
-        </li>
-      </ul>
-    </section>
-  </main>
-<div id="sign-up-modal" tabindex="-1" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header align-self-center">
-        <h2 class="text-center">Registration</h2>
-      </div>
-      <form id="sign-up" class="form-floating">
-        <div class="modal-body row">
-          <div class="col-3"></div>
-          <div class="col-6">
-            <label class="form-label fw-bolder">Email
-              <input id="sign-up-email" class="form-control" type="email" name="email" required>
-            </label>
-          </div>
-          <div class="col-3"></div>
-          <div class="col-sm-3"></div>
-          <div class="col-sm-6">
-            <p id="sign-up-email-error" class="text-danger"></p>
-          </div>
-          <div class="col-sm-3"></div>
-          <div class="col-3"></div>
-          <div class="col-6">
-            <label class="form-label fw-bolder">Password
-              <input id="sign-up-password" class="form-control" type="password" name="password" required>
-            </label>
-          </div>
-          <div class="col-3"></div>
-          <div class="col-sm-3"></div>
-          <div class="col-sm-6">
-            <p id="sign-up-password-error" class="text-danger"></p>
-          </div>
-          <div class="col-sm-3"></div>
-          <div class="col-3"></div>
-          <div class="col-6">
-            <label class="form-label fw-bolder">Confirm password
-              <input id="sign-up-confirmPassword" class="form-control" type="password" name="confirmPassword" required>
-            </label>
-          </div>
-          <div class="col-3"></div>
-          <div class="col-3"></div>
-          <div class="col-6">
-            <p id="sign-up-error" class="text-danger"></p>
-          </div>
-          <div class="col-3"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" id="submit-sign-up" class="btn btn-primary">Send</button>
-          <button type="button" id="close-modal-btn-sign-up" class="btn btn-danger">Close</button>
-        </div>
-      </form>
-    </div>
-  </div>
+					</div>
+					<div class="row">
+						<div class="d-flex align-items-center">
+							<button class="col-3 btn btn-secondary border-black" id="less-work">-</button>
+							<h2 class="text-center col-6">30</h2>
+							<button class="col-3 btn btn-secondary border-black" id="more-work">+</button>
+						</div>
+					</div>
+					<hr>
+					<h4 class="text-center">Break</h4>
+					<div class="row">
+						<div class="d-flex align-items-center">
+							<button class="col-3 btn btn-secondary border-black" id="less-break">-</button>
+							<h2 class="text-center col-6">5</h2>
+							<button class="col-3 btn btn-secondary border-black" id="more-break">+</button>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-3"></div>
+						<button class=" col-6 btn btn-primary border-black text-center" id="start-btn">Start</button>
+						<div class="col-3"></div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="col-5">
+			<h2 class="text-center">Finished</h2>
+			<ul class="list-group scroll-section" id="finished-tasks">
+				<li class="list-group-item text-center" id="calendar-li">
+
+					<label class="h5">Find by date
+						<input type="date" class="d-block mt-2" id="calendar-date" value="2024-10-07">
+						<button type="button" class="btn btn-primary border-black mt-1" id="calendar-btn">Search</button>
+					</label>
+
+				</li>
+				<li class="list-group-item">
+					<div class="row">
+						<div class="col-1"></div>
+						<div class="col-8">
+							<p class="visually-hidden uuid">value</p>
+							<h4 class="task-title">Task</h4>
+							<p class="task-text">Long and detail task description</p>
+							<p class="task-finish-time"></p>
+						</div>
+						<div class="col-2 task-buttons-finished">
+							<button type="button" class="btn btn-danger border-black delete-btn">🗑️</button>
+							<button type="button" class="btn btn-primary border-black continue-btn mt-1">⬅</button>
+						</div>
+						<div class="col-1"></div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<footer>
+		<h2 class="text-center">Motivation</h2>
+		<ul class="list-group">
+			<li class="list-group-item">
+				<h4 class="text-center" id="quote">Just do it</h4>
+				<h6 class="text-center text-secondary" id="author">-Shia LaBeouf</h6>
+			</li>
+		</ul>
+	</footer>
 </div>
-  <div id="login-modal" tabindex="-1" class="modal fade">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header align-self-center">
-          <h2 class="text-center">Authorization</h2>
-        </div>
-        <form class="form-floating" id="login">
-          <div class="modal-body row">
-            <div class="col-3"></div>
-            <div class="col-6">
-              <label class="form-label fw-bolder">Email
-                <input id="login-email" class="form-control" type="email" name="email" required>
-              </label>
-            </div>
-            <div class="col-3"></div>
-            <div class="col-sm-3"></div>
-            <div class="col-sm-6">
-              <p id="login-email-error" class="text-danger"></p>
-            </div>
-            <div class="col-sm-3"></div>
-            <div class="col-3"></div>
-            <div class="col-6">
-              <label class="form-label fw-bolder">Password
-                <input id="login-password" class="form-control" type="password" name="password" required>
-              </label>
-            </div>
-            <div class="col-3"></div>
-            <div class="col-sm-3"></div>
-            <div class="col-sm-6">
-              <p id="login-password-error" class="text-danger"></p>
-            </div>
-            <div class="col-sm-3"></div>
-            <div class="col-sm-3"></div>
-            <div class="col-sm-6">
-              <p id="login-error" class="text-danger"></p>
-            </div>
-            <div class="col-sm-3"></div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" id="submit-login" class="btn btn-primary">Send</button>
-            <button type="button" id="close-modal-btn-login" class="btn btn-danger">Close</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+<div id="sign-up-modal" tabindex="-1" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header align-self-center">
+				<h2 class="text-center">Registration</h2>
+			</div>
+			<form id="sign-up" class="form-floating">
+				<div class="modal-body row">
+					<div class="col-3"></div>
+					<div class="col-6">
+						<label class="form-label fw-bolder">Email
+							<input id="sign-up-email" class="form-control" type="email" name="email" required>
+						</label>
+					</div>
+					<div class="col-3"></div>
+					<div class="col-sm-3"></div>
+					<div class="col-sm-6">
+						<p id="sign-up-email-error" class="text-danger"></p>
+					</div>
+					<div class="col-sm-3"></div>
+					<div class="col-3"></div>
+					<div class="col-6">
+						<label class="form-label fw-bolder">Password
+							<input id="sign-up-password" class="form-control" type="password" name="password" required>
+						</label>
+					</div>
+					<div class="col-3"></div>
+					<div class="col-sm-3"></div>
+					<div class="col-sm-6">
+						<p id="sign-up-password-error" class="text-danger"></p>
+					</div>
+					<div class="col-sm-3"></div>
+					<div class="col-3"></div>
+					<div class="col-6">
+						<label class="form-label fw-bolder">Confirm password
+							<input id="sign-up-confirmPassword" class="form-control" type="password" name="confirmPassword" required>
+						</label>
+					</div>
+					<div class="col-3"></div>
+					<div class="col-3"></div>
+					<div class="col-6">
+						<p id="sign-up-error" class="text-danger"></p>
+					</div>
+					<div class="col-3"></div>
+					<div class="row">
+						<div class="col-sm-3"></div>
+						<div class="col-sm-6">
+							<p>Already registered? <span style="color: #0a58ca" id="move-to-login">Login</span></p>
+						</div>
+						<div class="col-sm-3"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" id="submit-sign-up" class="btn btn-primary">Send</button>
+					<button type="button" id="close-modal-btn-sign-up" class="btn btn-danger">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div id="login-modal" tabindex="-1" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header align-self-center">
+				<h2 class="text-center">Authorization</h2>
+			</div>
+			<form class="form-floating" id="login">
+				<div class="modal-body row">
+					<div class="col-3"></div>
+					<div class="col-6">
+						<label class="form-label fw-bolder">Email
+							<input id="login-email" class="form-control" type="email" name="email" required>
+						</label>
+					</div>
+					<div class="col-3"></div>
+					<div class="col-sm-3"></div>
+					<div class="col-sm-6">
+						<p id="login-email-error" class="text-danger"></p>
+					</div>
+					<div class="col-sm-3"></div>
+					<div class="col-3"></div>
+					<div class="col-6">
+						<label class="form-label fw-bolder">Password
+							<input id="login-password" class="form-control" type="password" name="password" required>
+						</label>
+					</div>
+					<div class="col-3"></div>
+					<div class="col-sm-3"></div>
+					<div class="col-sm-6">
+						<p id="login-password-error" class="text-danger"></p>
+					</div>
+					<div class="col-sm-3"></div>
+					<div class="col-sm-3"></div>
+					<div class="col-sm-6">
+						<p id="login-error" class="text-danger"></p>
+					</div>
+					<div class="col-sm-3"></div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3"></div>
+					<div class="col-sm-6">
+						<p>First here? <span style="color: #0a58ca" id="move-to-sign-up">Sign-up</span></p>
+					</div>
+					<div class="col-sm-3"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" id="submit-login" class="btn btn-primary">Send</button>
+					<button type="button" id="close-modal-btn-login" class="btn btn-danger">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 
-  <div id="logout-modal" tabindex="-1" class="modal fade">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header align-self-center">
-          <h2 class="text-center">Logout</h2>
-        </div>
-        <form id="logout" class="form-floating">
-          <div class="modal-body row">
-            <div class="col-3"></div>
-            <div class="col-6">
-              <h2 class="text-center">Are you sure want to logout?</h2>
-            </div>
-            <div class="col-3"></div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" id="logout-confirm" class="btn btn-primary">Logout</button>
-            <button type="button" id="close-modal-btn-logout" class="btn btn-danger">Close</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+<div id="edit-modal" class="modal fade" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header align-self-center">
+				<h2 class="text-center">Edit task</h2>
+			</div>
+			<form id="edit" class="form-floating">
+				<div class="modal-body row">
+					<div class="col-3"></div>
+					<div class="col-6">
+						<input type="hidden" id="edit-task-uuid" value="1">
+						<label class="form-label fw-bolder">Task name
+							<input id="edit-task-title" class="form-control" type="text" name="taskName" value="OldName" required>
+						</label>
+						<label class="form-label fw-bolder">Task description
+							<textarea id="edit-task-text" class="form-control" name="taskDescription" rows="3"
+							          required>OldDescription</textarea>
+						</label>
+						<p id="edit-task-do-before">2024-10-12T00:00:00</p>
+						<p id="edit-task-finished-time" hidden="hidden">2024-10-11T17:19:45</p>
+						<p id="edit-task-error" class="text-danger"></p>
+					</div>
+					<div class="col-3"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" id="submit-edit" class="btn btn-primary">Send</button>
+					<button type="button" id="delete-modal" class="btn btn-danger">Delete</button>
+					<button type="button" id="close-modal-btn-edit" class="btn btn-danger">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div id="logout-modal" tabindex="-1" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header align-self-center">
+				<h2 class="text-center">Logout</h2>
+			</div>
+			<form id="logout" class="form-floating">
+				<div class="modal-body row">
+					<div class="col-3"></div>
+					<div class="col-6">
+						<h2 class="text-center">Are you sure want to log out?</h2>
+					</div>
+					<div class="col-3"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" id="logout-confirm" class="btn btn-primary">Logout</button>
+					<button type="button" id="close-modal-btn-logout" class="btn btn-danger">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 
 
 </body>
