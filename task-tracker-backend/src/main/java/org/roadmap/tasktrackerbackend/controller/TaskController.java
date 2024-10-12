@@ -48,6 +48,9 @@ public class TaskController {
 
     @GetMapping("/tasks/unfinished/{date}")
     public List<Task> getUnfinishedByDate(@PathVariable String date) {
+        if (date == null || date.isEmpty()) {
+            return getUnfinished();
+        }
         try {
             Instant from = Instant.parse(date);
             Instant to = from.plus(1, DAYS);
