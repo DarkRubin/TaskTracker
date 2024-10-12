@@ -7,6 +7,7 @@ import org.roadmap.tasktrackerbackend.dto.UserDTO;
 import org.roadmap.tasktrackerbackend.exception.EmailAlreadyTakenException;
 import org.roadmap.tasktrackerbackend.exception.InvalidUserDetailsException;
 import org.roadmap.tasktrackerbackend.exception.UserNotFoundException;
+import org.roadmap.tasktrackerbackend.kafka.KafkaProducer;
 import org.roadmap.tasktrackerbackend.model.User;
 import org.roadmap.tasktrackerbackend.repository.UserRepository;
 import org.roadmap.tasktrackerbackend.security.CurrentUserAuthorizationDetails;
@@ -31,6 +32,7 @@ public class UserController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final KafkaProducer producer;
     private final CurrentUserAuthorizationDetails details;
 
     @GetMapping("/user")
@@ -52,6 +54,7 @@ public class UserController {
         repository.save(new User(email, encoded));
         String token = jwtService.generateToken(email, encoded);
         response.addHeader("Authorization", token);
+        producer.sendSuccessRegistration(email);
     }
 
     @PostMapping(value = "/auth/login", consumes = "application/*")

@@ -1,7 +1,6 @@
 spring:
   liquibase:
     enabled: true
-
   config:
     import: optional:file:resources/.env[.properties]
   application:
