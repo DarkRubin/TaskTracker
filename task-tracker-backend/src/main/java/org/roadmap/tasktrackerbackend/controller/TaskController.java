@@ -98,4 +98,12 @@ public class TaskController {
         return repository.save(task);
     }
 
+    @PatchMapping("/task/continue")
+    public Task continueFinished(@RequestBody TaskDTO dto) {
+        Task task = repository.getTaskByUuidAndOwnerOrThrow(dto.uuid(),
+                details.getCurrentUser());
+        task.setFinishedTime(null);
+        return repository.save(task);
+    }
+
 }
