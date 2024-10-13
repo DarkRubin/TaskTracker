@@ -11,5 +11,7 @@ spring:
 
   application:
     name: task-tracker-email-sender
+  kafka:
+    bootstrap-servers: ${BOOTSTRAP_SERVER}
 server:
   port: 8000
