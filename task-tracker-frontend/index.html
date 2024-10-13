@@ -77,15 +77,12 @@
 		<div class="col-2" id="current-task">
 			<h2 class="text-center">Focus</h2>
 			<ul class="list-group">
-				<li class="list-group-item">
+				<li class="list-group-item" id="chooser">
 					<h4 class="text-center">Time to work</h4>
-					<div>
-
-					</div>
 					<div class="row">
 						<div class="d-flex align-items-center">
 							<button class="col-3 btn btn-secondary border-black" id="less-work">-</button>
-							<h2 class="text-center col-6">30</h2>
+							<h2 class="text-center col-6" id="work">30</h2>
 							<button class="col-3 btn btn-secondary border-black" id="more-work">+</button>
 						</div>
 					</div>
@@ -94,7 +91,7 @@
 					<div class="row">
 						<div class="d-flex align-items-center">
 							<button class="col-3 btn btn-secondary border-black" id="less-break">-</button>
-							<h2 class="text-center col-6">5</h2>
+							<h2 class="text-center col-6" id="break">5</h2>
 							<button class="col-3 btn btn-secondary border-black" id="more-break">+</button>
 						</div>
 					</div>
@@ -104,6 +101,11 @@
 						<button class=" col-6 btn btn-primary border-black text-center" id="start-btn">Start</button>
 						<div class="col-3"></div>
 					</div>
+				</li>
+				<li class="list-group-item text-center" id="timer">
+					<h2><span id="minutes">28</span>:<span id="seconds">39</span></h2>
+					<br>
+					<button class="btn btn-danger text-center">Stop</button>
 				</li>
 			</ul>
 		</div>
@@ -317,7 +319,18 @@
 		</div>
 	</div>
 </div>
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+	<div id="api-error-toast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+		<div class="toast-header">
+			<strong class="me-auto">Error</strong>
+			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 
+		</div>
+		<div class="toast-body">
+
+		</div>
+	</div>
+</div>
 
 </body>
 </html>

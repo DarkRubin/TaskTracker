@@ -13,8 +13,16 @@ $(document).ready(function () {
     const calendarLi = $('#calendar-li');
     const unfinishedTasksButtons = $('.task-buttons');
     const finishedTasksButtons = $('.task-buttons-finished');
+    const timer = $('#timer').hide();
+    const chooser = $('#chooser');
+    
+    const toast = $('#api-error-toast');
 
     let jwtToken = null;
+
+    let toWork = $('#work');
+
+    let toBreak = $('#break');
 
     //headers
     const contentTypeHeader = {
@@ -366,8 +374,7 @@ $(document).ready(function () {
             headers: contentTypeHeader,
             body: `{
                     "email": "${$('#sign-up-email').val()}",
-                    "password": "${$('#sign-up-password').val()}",
-                    "firstName": "${$('#sign-up-confirmPassword').val()}"
+                    "password": "${$('#sign-up-password').val()}"
                 }`
         }).then(response => {
             if (!response.ok) {
@@ -447,21 +454,92 @@ $(document).ready(function () {
             const message = errorInfo.message;
             if (message === "Authentication token is expired, login for get new token" || 
                 message === "Invalid JWT token") {
-                updateJwtHeader();
+                updateJwtToken();
             }
             if (message === "User not found" || 
                 message === "User not authorized or token is expired") {
                 showDefaultContent();
                 loginModal.show();
             } else {
-                alert(message);
+                $(toast).find('.toast-body').text(message);
+                toast.toast("show");
             }
         });
     }
     
     
+
+    $(document).on("click", "#less-work", function (e) {
+        e.preventDefault();
+        if (toWork.text() > 10) {
+            toWork.text(parseInt(toWork.text()) - 5);
+        }
+    });
+
+    $(document).on("click", "#more-work", function (e) {
+        e.preventDefault();
+        if (toWork.text() < 120) {
+            toWork.text(parseInt(toWork.text()) + 5);
+        }
+    });
+
+    $(document).on("click", "#less-break", function (e) {
+        e.preventDefault();
+        if (toBreak.text() > 5) {
+            toBreak.text(parseInt(toBreak.text()) - 5);
+        }
+    });
+
+    $(document).on("click", "#more-break", function (e) {
+        e.preventDefault();
+        if (toBreak.text() < 40) {
+            toBreak.text(parseInt(toBreak.text()) + 5);
+        }
+    });
+    
+    $(document).on("click", "#start-btn", function (e) {
+        e.preventDefault();
+        if (isNotAuthorized()) {
+            loginModal.show();
+            return;
+        }
+        chooser.hide();
+        timer.show();
+        // pomodoroTimer().then(r => {} );
+    });
+
+    const minutes = $('#minutes');
+    const seconds = $('#seconds');
+    
+    async function pomodoroTimer() {
+        minutes.text(toWork.text());
+        seconds.text("00");
+        while (!isFinished()) {
+            setTimeout(minusSecond, 1000, parseInt(seconds.text())), parseInt(minutes.text());
+            function minusSecond(sec, min) {
+                if (seconds === 0) {
+                    minutes.text(min--)
+                    seconds.text(59);
+                } else {
+                    seconds.text(sec--);
+                }
+            }
+        }
+        function isFinished() {
+            return parseInt(minutes.text()) === 0 && parseInt(seconds.text()) === 0
+        }
+    }
+    
+    
     function updateJwtToken() {
-        
+        fetch(`${host}/user`, {
+            headers: multiHeader
+        }).then(response => {
+            if (response.ok) {
+                jwtToken = response.headers.get("Authorization");
+                updateJwtHeader();
+            } else handleError(response);
+        })
         
     }
 
