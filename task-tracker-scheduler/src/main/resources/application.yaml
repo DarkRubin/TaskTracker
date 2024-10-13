@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: task-tracker-scheduler
+  datasource:
+    url: ${DATASOURCE_URL}
+    password: ${DATASOURCE_PASSWORD}
+server:
+  port: 8880
