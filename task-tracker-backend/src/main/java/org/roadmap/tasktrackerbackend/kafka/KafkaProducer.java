@@ -26,7 +26,7 @@ public class KafkaProducer {
 
     public void sendSuccessRegistration(String email) {
         Message message = new Message(
-                email, "Success registration", "Hello, " + email + "! Your registration was successful!"
+                email, "Success registration😎", "Hello, " + email + "! Your registration was successful!"
         );
         try {
             String jsonMessage = objectMapper.writeValueAsString(message);
