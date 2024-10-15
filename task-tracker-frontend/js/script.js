@@ -497,16 +497,16 @@ $(document).ready(function () {
         }
     });
     
-    $(document).on("click", "#start-btn", function (e) {
-        e.preventDefault();
-        if (isNotAuthorized()) {
-            loginModal.show();
-            return;
-        }
-        chooser.hide();
-        timer.show();
-        // pomodoroTimer().then(r => {} );
-    });
+    // $(document).on("click", "#start-btn", function (e) {
+    //     e.preventDefault();
+    //     if (isNotAuthorized()) {
+    //         loginModal.show();
+    //         return;
+    //     }
+    //     chooser.hide();
+    //     timer.show();
+    //     // pomodoroTimer().then(r => {} );
+    // });
 
     const minutes = $('#minutes');
     const seconds = $('#seconds');
