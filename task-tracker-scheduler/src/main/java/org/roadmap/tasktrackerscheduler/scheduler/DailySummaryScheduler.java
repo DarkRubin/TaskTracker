@@ -1,6 +1,5 @@
 package org.roadmap.tasktrackerscheduler.scheduler;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.roadmap.tasktrackerscheduler.dto.DaySummaryDto;
 import org.roadmap.tasktrackerscheduler.entity.Task;
