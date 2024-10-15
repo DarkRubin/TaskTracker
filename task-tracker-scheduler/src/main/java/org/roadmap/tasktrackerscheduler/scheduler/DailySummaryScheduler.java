@@ -25,11 +25,6 @@ public class DailySummaryScheduler {
 
     private final UserRepository userRepository;
 
-    @PostConstruct
-    public void init() {
-        sendDayReport();
-    }
-
     @Scheduled(cron = "0 0 0 * * *")
     public void sendDayReport() {
         for (User user : userRepository.findAll()) {
