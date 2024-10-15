@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ConsumerService {
+public class ListenerService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConsumerService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ListenerService.class);
 
     private final MailService mailService;
 
