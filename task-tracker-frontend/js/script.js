@@ -366,6 +366,28 @@ $(document).ready(function () {
         })
     });
 
+    $('#login-email').on("input", function () {
+        let email = $('#login-email').val();
+        if (regex.test(email)) {
+            incorrect = false;
+            $('#login-email-error').text('');
+        } else {
+            incorrect = true;
+            $('#login-email-error').text("Invalid email address");
+        }
+    });
+
+    $('#sign-up-email').on("input", function () {
+        let email = $('#sign-up-email').val();
+        if (regex.test(email)) {
+            incorrect = false;
+            $('#sign-up-email-error').text('');
+        } else {
+            incorrect = true;
+            $('#sign-up-email-error').text("Invalid email address");
+        }
+    });
+
     $('#sign-up').on("submit", function (e) {
         e.preventDefault();
         if (incorrect) return;
@@ -393,6 +415,7 @@ $(document).ready(function () {
 
     $('#login').on("submit", function (e) {
         e.preventDefault();
+        if (incorrect) return;
         fetch(`${host}/auth/login`, {
             method: 'POST',
             headers: contentTypeHeader,

@@ -49,7 +49,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         var cors = new CorsConfiguration();
-        cors.setAllowedOrigins(List.of("http://localhost:80", "http://localhost:63342", "http://localhost"));
+        cors.setAllowedOrigins(List.of("http://185.237.207.128:80", "http://localhost:63342", "http://185.237.207.128"));
         cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         cors.setAllowedHeaders(List.of("Content-Type", "Authorization"));
         cors.setExposedHeaders(List.of("Authorization"));
@@ -60,8 +60,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
