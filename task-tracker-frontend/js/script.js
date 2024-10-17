@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
 
-    const host = "http://localhost:8080"
+    const host = "http://185.237.207.128:8080"
 
     //modals
     const signUpModal = bootstrap.Modal.getOrCreateInstance('#sign-up-modal');
@@ -497,38 +497,58 @@ $(document).ready(function () {
         }
     });
     
-    // $(document).on("click", "#start-btn", function (e) {
-    //     e.preventDefault();
-    //     if (isNotAuthorized()) {
-    //         loginModal.show();
-    //         return;
-    //     }
-    //     chooser.hide();
-    //     timer.show();
-    //     // pomodoroTimer().then(r => {} );
-    // });
+    let stop = false;
+    
+    $(document).on("click", "#start-btn", function (e) {
+        e.preventDefault();
+        if (isNotAuthorized()) {
+            loginModal.show();
+            return;
+        }
+        chooser.hide();
+        timer.show();
+        stop = false
+        pomodoroTimer().then();
+    });
 
     const minutes = $('#minutes');
     const seconds = $('#seconds');
     
     async function pomodoroTimer() {
         minutes.text(toWork.text());
-        seconds.text("00");
-        while (!isFinished()) {
-            setTimeout(minusSecond, 1000, parseInt(seconds.text())), parseInt(minutes.text());
-            function minusSecond(sec, min) {
-                if (seconds === 0) {
-                    minutes.text(min--)
-                    seconds.text(59);
-                } else {
-                    seconds.text(sec--);
-                }
+        seconds.text(0);
+        setInterval(function () {
+            if (stop) {
+                clearInterval(id);
+                return;
             }
-        }
-        function isFinished() {
-            return parseInt(minutes.text()) === 0 && parseInt(seconds.text()) === 0
-        }
+            let min = parseInt(minutes.text());
+            let sec = parseInt(seconds.text());
+            if (sec === 0) {
+                if (min === 0) {
+                    clearInterval(id);
+                } else {
+                    min--;
+                    sec = 59;
+                }
+            } else {
+                sec--;
+            }
+            minutes.text(min);
+            if (sec < 10) {
+                seconds.text("0" + sec)
+            } else {
+                seconds.text(sec);
+            }
+        }, 1000)
     }
+    
+    $(document).on("click", "#end-btn", function (e) {
+        e.preventDefault();
+        stop = true
+        chooser.show();
+        timer.hide();
+    })
     
     
     function updateJwtToken() {
