@@ -56,7 +56,7 @@ services:
   backend:
     restart: unless-stopped
     build:
-      context: /task-tracker-backend
+      context: task-tracker-backend
       dockerfile: ../task-tracker-backend/Dockerfile
     container_name: app
     depends_on:
@@ -76,7 +76,7 @@ services:
   frontend:
     restart: unless-stopped
     build:
-      context: /task-tracker-frontend
+      context: task-tracker-frontend
       dockerfile: ../task-tracker-frontend/Dockerfile
     container_name: frontend
     depends_on:
@@ -89,7 +89,7 @@ services:
   scheduler:
     restart: unless-stopped
     build:
-      context: /task-tracker-scheduler
+      context: task-tracker-scheduler
       dockerfile: ../task-tracker-scheduler/Dockerfile
     container_name: scheduler
     depends_on:
@@ -107,7 +107,7 @@ services:
   email-sender:
     restart: unless-stopped
     build:
-      context: /task-tracker-email-sender
+      context: task-tracker-email-sender
       dockerfile: ../task-tracker-email-sender/Dockerfile
     container_name: email-sender
     depends_on:
