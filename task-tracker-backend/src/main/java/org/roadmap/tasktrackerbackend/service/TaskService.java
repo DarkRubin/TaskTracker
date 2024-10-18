@@ -51,11 +51,15 @@ public class TaskService {
     }
 
     public void delete(TaskDTO dto) {
-        repository.delete(map(dto));
+        Task task = map(dto);
+        task.setOwner(details.getCurrentUser());
+        repository.delete(task);
     }
 
     public Task save(TaskDTO dto) {
-        return repository.save(map(dto));
+        Task task = map(dto);
+        task.setOwner(details.getCurrentUser());
+        return repository.save(task);
     }
 
 }
