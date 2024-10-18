@@ -11,6 +11,7 @@ import org.roadmap.tasktrackerbackend.kafka.KafkaProducer;
 import org.roadmap.tasktrackerbackend.model.User;
 import org.roadmap.tasktrackerbackend.repository.UserRepository;
 import org.roadmap.tasktrackerbackend.security.CurrentUserAuthorizationDetails;
+import org.roadmap.tasktrackerbackend.service.TaskService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -32,6 +33,7 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
     private final KafkaProducer producer;
     private final CurrentUserAuthorizationDetails details;
+    private final TaskService taskService;
 
     @GetMapping("/user")
     public User getUser() {
@@ -50,7 +52,7 @@ public class UserController {
         }
         repository.save(new User(email, passwordEncoder.encode(password)));
         details.setAuthorization(email, password, response);
-
+        taskService.addStartTasks();
         producer.sendSuccessRegistration(email);
     }
 
