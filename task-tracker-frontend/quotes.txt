@@ -1,41 +1,41 @@
-~“Just do it.” —Shia LaBeouf
-~“We cannot solve problems with the kind of thinking we employed when we came up with them.” —Albert Einstein
-~“Learn as if you will live forever, live like you will die tomorrow.” —Mahatma Gandhi
-~“When you change your thoughts, remember to also change your world.” —Norman Vincent Peale
-~“Stay away from those people who try to disparage your ambitions. Small minds will always do that, but great minds will give you a feeling that you can become great too.” —Mark Twain
-~“When you give joy to other people, you get more joy in return. You should give a good thought to the happiness that you can give out.” —Eleanor Roosevelt
-~“When you change your thoughts, remember to also change your world.” —Norman Vincent Peale
-~“It is only when we take chances that our lives improve. The initial and the most difficult risk we need to take is to become honest.” —Walter Anderson
-~“Nature has given us all the pieces required to achieve exceptional wellness and health, but has left it to us to put these pieces together.” —Diane McLaren
-~“Success is not final; failure is not fatal: It is the courage to continue that counts.” —Winston Churchill
-~“It is better to fail in originality than to succeed in imitation.” —Herman Melville
-~“The road to success and the road to failure are almost exactly the same.” —Colin R. Davis
-~“In 1994 I was shot on the eastern border! I was shot, but I didn’t give up!!!” —Alexander Lukashenko
-~“Success usually comes to those who are too busy to be looking for it.” —Henry David Thoreau
-~“Develop success from failures. Discouragement and failure are two of the surest stepping stones to success.” —Dale Carnegie
-~“Nothing in the world can take the place of persistence. Talent will not; nothing is more common than unsuccessful men with talent. Genius will not; unrewarded genius is almost a proverb. Education will not; the world is full of educated derelicts. The slogan ‘Press On’ has solved and always will solve the problems of the human race.” —Calvin Coolidge
-~“There are three ways to ultimate success: The first way is to be kind. The second way is to be kind. The third way is to be kind.” —Mister Rogers
-~“Success is peace of mind, which is a direct result of self-satisfaction in knowing you made the effort to become the best of which you are capable.” —John Wooden
-~“I never dreamed about success. I worked for it.” —Estée Lauder
-~“Success is getting what you want; happiness is wanting what you get.”―W. P. Kinsella
-~“Never gonna give you upNever gonna let you down” —Rick Astley
-~“Concentrate all your thoughts upon the work in hand. The sun’s rays do not burn until brought to a focus.” —Alexander Graham Bell
-~“Either you run the day or the day runs you.” —Jim Rohn
-~“I’m a great believer in luck, and I find the harder I work, the more I have of it.” —Thomas Jefferson
-~“When we strive to become better than we are, everything around us becomes better too.” —Paulo Coelho
-~“Opportunity is missed by most people because it is dressed in overalls and looks like work.” —Thomas Edison
-~“Setting goals is the first step in turning the invisible into the visible.” —Tony Robbins
-~“Your work is going to fill a large part of your life, and the only way to be truly satisfied is to do what you believe is great work. And the only way to do great work is to love what you do. If you haven’t found it yet, keep looking. Don’t settle. As with all matters of the heart, you’ll know when you find it.” —Steve Jobs
-~“It is remarkable how much long-term advantage people like us have gotten by trying to be consistently not stupid, instead of trying to be very intelligent.” —Charlie Munger
-~“You can’t be that kid standing at the top of the waterslide, overthinking it. You have to go down the chute.” —Tina Fey
-~“When I believe in something, I’m like a dog with a bone.” —Melissa McCarthy
-~“And the day came when the risk to remain tight in a bud was more painful than the risk it took to blossom.” —Anaïs Nin
-~“The standard you walk past is the standard you accept.” —David Hurley
-~“I’ve searched all the parks in all the cities and found no statues of committees.” —Gilbert K. Chesterton
-~“Success is stumbling from failure to failure with no loss of enthusiasm.” ―Winston Churchill
-~“Keep your eyes on the stars, and your feet on the ground.” ―Theodore Roosevelt
-~“Write simulation.” ―Sergey Zhukov
-~“Do not stop thinking of life as an adventure. You have no security unless you can live bravely, excitingly, imaginatively; unless you can choose a challenge instead of competence.” ―Eleanor Roosevelt
-~“Perfection is not attainable. But if we chase perfection we can catch excellence.” —Vince Lombardi
-~“Get a good idea and stay with it. Dog it, and work at it until it’s done right.” —Walt Disney
-~“Optimism is the faith that leads to achievement. Nothing can be done without hope and confidence.” —Helen Keller
+“Just do it.” —Shia LaBeouf
+“We cannot solve problems with the kind of thinking we employed when we came up with them.” —Albert Einstein
+“Learn as if you will live forever, live like you will die tomorrow.” —Mahatma Gandhi
+“When you change your thoughts, remember to also change your world.” —Norman Vincent Peale
+“Stay away from those people who try to disparage your ambitions. Small minds will always do that, but great minds will give you a feeling that you can become great too.” —Mark Twain
+“When you give joy to other people, you get more joy in return. You should give a good thought to the happiness that you can give out.” —Eleanor Roosevelt
+“When you change your thoughts, remember to also change your world.” —Norman Vincent Peale
+“It is only when we take chances that our lives improve. The initial and the most difficult risk we need to take is to become honest.” —Walter Anderson
+“Nature has given us all the pieces required to achieve exceptional wellness and health, but has left it to us to put these pieces together.” —Diane McLaren
+“Success is not final; failure is not fatal: It is the courage to continue that counts.” —Winston Churchill
+“It is better to fail in originality than to succeed in imitation.” —Herman Melville
+“The road to success and the road to failure are almost exactly the same.” —Colin R. Davis
+“In 1994 I was shot on the eastern border! I was shot, but I didn’t give up!!!” —Alexander Lukashenko
+“Success usually comes to those who are too busy to be looking for it.” —Henry David Thoreau
+“Develop success from failures. Discouragement and failure are two of the surest stepping stones to success.” —Dale Carnegie
+“Nothing in the world can take the place of persistence. Talent will not; nothing is more common than unsuccessful men with talent. Genius will not; unrewarded genius is almost a proverb. Education will not; the world is full of educated derelicts. The slogan ‘Press On’ has solved and always will solve the problems of the human race.” —Calvin Coolidge
+“There are three ways to ultimate success: The first way is to be kind. The second way is to be kind. The third way is to be kind.” —Mister Rogers
+“Success is peace of mind, which is a direct result of self-satisfaction in knowing you made the effort to become the best of which you are capable.” —John Wooden
+“I never dreamed about success. I worked for it.” —Estée Lauder
+“Success is getting what you want; happiness is wanting what you get.”―W. P. Kinsella
+“Never gonna give you upNever gonna let you down” —Rick Astley
+“Concentrate all your thoughts upon the work in hand. The sun’s rays do not burn until brought to a focus.” —Alexander Graham Bell
+“Either you run the day or the day runs you.” —Jim Rohn
+“I’m a great believer in luck, and I find the harder I work, the more I have of it.” —Thomas Jefferson
+“When we strive to become better than we are, everything around us becomes better too.” —Paulo Coelho
+“Opportunity is missed by most people because it is dressed in overalls and looks like work.” —Thomas Edison
+“Setting goals is the first step in turning the invisible into the visible.” —Tony Robbins
+“Your work is going to fill a large part of your life, and the only way to be truly satisfied is to do what you believe is great work. And the only way to do great work is to love what you do. If you haven’t found it yet, keep looking. Don’t settle. As with all matters of the heart, you’ll know when you find it.” —Steve Jobs
+“It is remarkable how much long-term advantage people like us have gotten by trying to be consistently not stupid, instead of trying to be very intelligent.” —Charlie Munger
+“You can’t be that kid standing at the top of the waterslide, overthinking it. You have to go down the chute.” —Tina Fey
+“When I believe in something, I’m like a dog with a bone.” —Melissa McCarthy
+“And the day came when the risk to remain tight in a bud was more painful than the risk it took to blossom.” —Anaïs Nin
+“The standard you walk past is the standard you accept.” —David Hurley
+“I’ve searched all the parks in all the cities and found no statues of committees.” —Gilbert K. Chesterton
+“Success is stumbling from failure to failure with no loss of enthusiasm.” ―Winston Churchill
+“Keep your eyes on the stars, and your feet on the ground.” ―Theodore Roosevelt
+“Write simulation.” ―Sergey Zhukov
+“Do not stop thinking of life as an adventure. You have no security unless you can live bravely, excitingly, imaginatively; unless you can choose a challenge instead of competence.” ―Eleanor Roosevelt
+“Perfection is not attainable. But if we chase perfection we can catch excellence.” —Vince Lombardi
+“Get a good idea and stay with it. Dog it, and work at it until it’s done right.” —Walt Disney
+“Optimism is the faith that leads to achievement. Nothing can be done without hope and confidence.” —Helen Keller

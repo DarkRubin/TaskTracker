@@ -318,7 +318,7 @@ $(document).ready(function () {
             passwordError.text("Password must contains minimum 1 latin letter");
             incorrect = true;
         } else incorrect = false;
-    }); //TODO
+    });
     $(document).on("click", '#do-before-checkbox', () => {
         if ($('#do-before-checkbox').val()) {
             $('#task-do-before').removeAttr("disabled")
@@ -466,7 +466,7 @@ $(document).ready(function () {
             {
                 uuid: "1",
                 title: "Log in or Sign-up",
-                text: "For enable all features you need to lod in or sign-up",
+                text: "For enable all features you need to log in or sign-up",
                 finishedTime: null,
             }
         ], unfinishedTasks, false);
@@ -586,31 +586,26 @@ $(document).ready(function () {
         
     }
 
-    // const motivationText = $('#quote');
-    //
-    // let quotes;
-    //
-    // async function loadQuotes() {
-    //     fetch("quotes.txt").then(response => {
-    //         response.text().then(text => {
-    //             quotes = text.split(/~/);
-    //             motivation();
-    //         });
-    //     });
-    // }
-    //
-    // function motivation() {
-    //     let thisQuote;
-    //     $.each(quotes, (index, quote) => {
-    //         thisQuote = quote
-    //         setTimeout(function () {
-    //             motivationText.text(thisQuote)
-    //         }, 3000);
-    //     });
-    //    
-    // }
-    //
-    //
-    // loadQuotes().then();
+    let quotes = [];
+    let currentQuoteIndex = 0;
 
+    $.get('quotes.txt', function(data) {
+        quotes = data.split('\n').filter(Boolean);
+
+        function showQuote() {
+            if (quotes.length > 0) {
+                $('#quote').fadeOut(500, function() {
+                    $('#quote').text(quotes[currentQuoteIndex]);
+                    
+                    $('#quote').fadeIn(500);
+                });
+
+                currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+            }
+        }
+
+        showQuote();
+
+        setInterval(showQuote, 30000);
+    });
 });
