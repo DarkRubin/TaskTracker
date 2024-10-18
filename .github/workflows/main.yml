@@ -17,9 +17,9 @@ jobs:
           user: ${{secrets.SSH_USER}}
           private_key: ${{secrets.SSH_PRIVATE_KEY}}
           command: |
-            sudo cd ${{secrets.PROJECT_FOLDER}};
-            sudo git checkout main;
-            sudo git pull;
-            sudo docker-compose --file compose.yaml down;
-            sudo docker-compose --file compose.yaml up -d;
-            sudo docker system prune --all --force;
+            cd ${{secrets.PROJECT_FOLDER}};
+            git checkout master;
+            git pull;
+            docker-compose --file compose.yaml down;
+            docker-compose --file compose.yaml up -d;
+            docker system prune --all --force;
