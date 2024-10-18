@@ -70,7 +70,7 @@ public class UserController {
         var authentication = new UsernamePasswordAuthenticationToken(email, password);
         try {
             authenticationManager.authenticate(authentication);
-            details.setAuthorization(email, password, response);
+            details.setAuthorization(email, response);
         } catch (AuthenticationException e) {
             throw new UserNotFoundException();
         }

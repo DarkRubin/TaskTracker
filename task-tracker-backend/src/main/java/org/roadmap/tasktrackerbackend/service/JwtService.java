@@ -21,11 +21,8 @@ public class JwtService {
 
     private static final long TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000L;
 
-    public String generateToken(String email, String password) {
-        Map<String, Object> claims = Map.of(
-                "email", email,
-                "password", password);
-        return Jwts.builder().claims(claims)
+    public String generateToken(String email) {
+        return Jwts.builder().claims(Map.of("email", email))
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME))
                 .signWith(getSigningKey(), Jwts.SIG.HS256).compact();

@@ -16,7 +16,6 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 public class CurrentUserAuthorizationDetails {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
     public User getCurrentUser() {
@@ -26,9 +25,8 @@ public class CurrentUserAuthorizationDetails {
                 .orElseThrow(UserNotAuthorizedException::new);
     }
 
-    public void setAuthorization(String email, String password, HttpServletResponse response) {
-        String encoded = passwordEncoder.encode(password);
-        String token = jwtService.generateToken(email, encoded);
+    public void setAuthorization(String email, HttpServletResponse response) {
+        String token = jwtService.generateToken(email);
         response.addHeader("Authorization", token);
     }
 }
