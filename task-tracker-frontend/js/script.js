@@ -77,7 +77,7 @@ $(document).ready(function () {
                     loadTasks();
                 });
             }
-        }).catch(error => alert(error));
+        }).catch(error => handleError(error));
     }
 
     loadContent();
@@ -585,5 +585,32 @@ $(document).ready(function () {
         })
         
     }
+
+    // const motivationText = $('#quote');
+    //
+    // let quotes;
+    //
+    // async function loadQuotes() {
+    //     fetch("quotes.txt").then(response => {
+    //         response.text().then(text => {
+    //             quotes = text.split(/~/);
+    //             motivation();
+    //         });
+    //     });
+    // }
+    //
+    // function motivation() {
+    //     let thisQuote;
+    //     $.each(quotes, (index, quote) => {
+    //         thisQuote = quote
+    //         setTimeout(function () {
+    //             motivationText.text(thisQuote)
+    //         }, 3000);
+    //     });
+    //    
+    // }
+    //
+    //
+    // loadQuotes().then();
 
 });
