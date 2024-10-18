@@ -21,5 +21,6 @@ jobs:
             git checkout master;
             git pull;
             docker compose --file compose.yaml down;
-            docker rmi -f $(docker images -aq)
+            docker system prune -a;
+            y;
             docker compose --file compose.yaml up -d;
