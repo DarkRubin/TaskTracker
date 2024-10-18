@@ -8,7 +8,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.roadmap.tasktrackerbackend.exception.InvalidTokenException;
 import org.roadmap.tasktrackerbackend.exception.TokenExpiredException;
 import org.roadmap.tasktrackerbackend.service.JwtService;
@@ -51,9 +50,7 @@ public class JwtAccessFilter extends OncePerRequestFilter {
             String token = header.substring(PREFIX.length());
             try {
                 var username = jwtService.extractEmail(token);
-                if (isNotAuthorized(username)) {
-                    authorize(request, userService.loadUserByUsername(username));
-                }
+                authorize(request, userService.loadUserByUsername(username));
             } catch (ExpiredJwtException e) {
                 throw new TokenExpiredException();
             } catch (MalformedJwtException e) {
@@ -61,10 +58,6 @@ public class JwtAccessFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
-    }
-
-    private static boolean isNotAuthorized(String username) {
-        return Strings.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null;
     }
 
     private void authorize(HttpServletRequest request, UserDetails userDetails) {
