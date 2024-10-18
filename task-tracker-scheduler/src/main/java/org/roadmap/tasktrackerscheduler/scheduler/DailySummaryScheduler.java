@@ -7,13 +7,13 @@ import org.roadmap.tasktrackerscheduler.entity.User;
 import org.roadmap.tasktrackerscheduler.producer.SummaryProducer;
 import org.roadmap.tasktrackerscheduler.repository.TaskRepository;
 import org.roadmap.tasktrackerscheduler.repository.UserRepository;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Configuration
+@Service
 @EnableScheduling
 @RequiredArgsConstructor
 public class DailySummaryScheduler {
