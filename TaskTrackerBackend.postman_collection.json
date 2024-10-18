@@ -1,0 +1,380 @@
+{
+	"info": {
+		"_postman_id": "d78e0f48-ad40-4c41-947f-53b1c90ec819",
+		"name": "TaskTrackerBackend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34691291"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Read",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Registration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user23@gmail.com\",\r\n    \"password\": \"wuf2oprjre0geijge\",\r\n    \"confirmPassword\": \"wuf2oprjre0geijge\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "user@jeeiioeiog.ciio",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "wufewiof8494",
+									"disabled": true
+								},
+								{
+									"key": "confirmPassword",
+									"value": "wufewiof8494",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authorization",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/auth/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Tasks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Expires",
+								"value": "Fri Oct 04 07:35:51 EEST 2024",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:8080/tasks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Default title\",\r\n    \"text\": \"Some text\",\r\n    \"doBefore\": \"2024-10-09T19:38:00.390Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/task",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"uuid\": \"8b37983f-009a-4722-9f78-ce48e8ace7a1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/task",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Finish",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"uuid\": \"b1f651d4-26fb-4c06-b410-704c7b85329e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/task/finish",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"task",
+								"finish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change title",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newTitle\": \"New title\",\r\n    \"uuid\": \"4a1747f4-49de-48cc-9c11-f80ebe098a62\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/task/title",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"task",
+								"title"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change text",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newText\": \"New cool text\",\r\n    \"uuid\": \"4a1747f4-49de-48cc-9c11-f80ebe098a62\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/task/text",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"task",
+								"text"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Finished",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tasks/finished",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks",
+								"finished"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unfinished",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tasks/unfinished",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks",
+								"unfinished"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FoundByDate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tasks/unfinished/2024-10-11T00:00:00Z",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tasks",
+								"unfinished",
+								"2024-10-11T00:00:00Z"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{tocken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "tocken",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InVzZXI2QGplZWlpb2Vpb2cuY2lpbyIsInBhc3N3b3JkIjoiJDJhJDEwJGFxRjhlbDhJS3o3TXBEeEtIMFduVi5DUGsxb3JoS0kvLi90akhvSjA0YnRBd3FLTXJ4bXRtIiwiaWF0IjoxNzI3OTczMzg0LCJleHAiOjE3MjgwNTk3ODR9.4hZP0Ql758lJi320M4kE9Sp57XNx5mEYgB6B4Wwc7Nw"
+		},
+		{
+			"key": "tocken-secret",
+			"value": "53A73E5F1B4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75321855",
+			"disabled": true
+		}
+	]
+}
