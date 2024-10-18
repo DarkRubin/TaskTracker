@@ -11,7 +11,6 @@ import org.roadmap.tasktrackerbackend.kafka.KafkaProducer;
 import org.roadmap.tasktrackerbackend.model.User;
 import org.roadmap.tasktrackerbackend.repository.UserRepository;
 import org.roadmap.tasktrackerbackend.security.CurrentUserAuthorizationDetails;
-import org.roadmap.tasktrackerbackend.service.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserRepository repository;
-    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final KafkaProducer producer;
@@ -47,13 +45,12 @@ public class UserController {
         }
         String email = dto.email();
         String password = dto.password();
-        if (repository.findByEmail(email).isPresent()) {
+        if (repository.existsByEmail(email)) {
             throw new EmailAlreadyTakenException();
         }
-        String encoded = passwordEncoder.encode(password);
-        repository.save(new User(email, encoded));
-        String token = jwtService.generateToken(email, encoded);
-        response.addHeader("Authorization", token);
+        repository.save(new User(email, passwordEncoder.encode(password)));
+        details.setAuthorization(email, password, response);
+
         producer.sendSuccessRegistration(email);
     }
 
@@ -64,12 +61,10 @@ public class UserController {
         var authentication = new UsernamePasswordAuthenticationToken(email, password);
         try {
             authenticationManager.authenticate(authentication);
+            details.setAuthorization(email, password, response);
         } catch (AuthenticationException e) {
             throw new UserNotFoundException();
         }
-        String encodedPassword = passwordEncoder.encode(password);
-        String token = jwtService.generateToken(email, encodedPassword);
-        response.addHeader("Authorization", token);
     }
 
     @DeleteMapping("/auth/logout")
