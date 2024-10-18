@@ -20,6 +20,6 @@ jobs:
             cd ${{secrets.PROJECT_FOLDER}};
             git checkout master;
             git pull;
-            docker rmi --force $(docker images -aq)
             docker compose --file compose.yaml down;
+            docker rmi -f $(docker images -aq)
             docker compose --file compose.yaml up -d;
