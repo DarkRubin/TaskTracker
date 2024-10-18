@@ -14,4 +14,9 @@ public class ControllerAdvice {
     private ResponseEntity<Map<String, String>> sendErrorMessage(BasicRuntimeException ex) {
         return ResponseEntity.status(ex.getCode()).body(Map.of("message", ex.getMessage()));
     }
+
+    @ExceptionHandler(Exception.class)
+    private ResponseEntity<Map<String, String>> sendErrorMessage() {
+        return ResponseEntity.status(500).body(Map.of("message", "Unexpected error"));
+    }
 }
