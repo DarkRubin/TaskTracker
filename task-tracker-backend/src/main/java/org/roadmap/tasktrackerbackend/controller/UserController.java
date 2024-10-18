@@ -11,7 +11,6 @@ import org.roadmap.tasktrackerbackend.kafka.KafkaProducer;
 import org.roadmap.tasktrackerbackend.model.User;
 import org.roadmap.tasktrackerbackend.repository.UserRepository;
 import org.roadmap.tasktrackerbackend.security.CurrentUserAuthorizationDetails;
-import org.roadmap.tasktrackerbackend.service.TaskService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -33,7 +32,6 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
     private final KafkaProducer producer;
     private final CurrentUserAuthorizationDetails details;
-    private final TaskService taskService;
 
     @GetMapping("/user")
     public User getUser() {
@@ -51,8 +49,7 @@ public class UserController {
             throw new EmailAlreadyTakenException();
         }
         repository.save(new User(email, passwordEncoder.encode(password)));
-        details.setAuthorization(email, password, response);
-        taskService.addStartTasks();
+        authenticate(response, email, password);
         producer.sendSuccessRegistration(email);
     }
 
@@ -60,6 +57,16 @@ public class UserController {
     public void login(@RequestBody UserDTO userDTO, HttpServletResponse response) {
         String email = userDTO.email();
         String password = userDTO.password();
+        authenticate(response, email, password);
+    }
+
+    @DeleteMapping("/auth/logout")
+    public void logout(HttpServletResponse response) {
+        response.setHeader("Authorization", "");
+        SecurityContextHolder.clearContext();
+    }
+
+    private void authenticate(HttpServletResponse response, String email, String password) {
         var authentication = new UsernamePasswordAuthenticationToken(email, password);
         try {
             authenticationManager.authenticate(authentication);
@@ -67,12 +74,6 @@ public class UserController {
         } catch (AuthenticationException e) {
             throw new UserNotFoundException();
         }
-    }
-
-    @DeleteMapping("/auth/logout")
-    public void logout(HttpServletResponse response) {
-        response.setHeader("Authorization", "");
-        SecurityContextHolder.clearContext();
     }
 
 }

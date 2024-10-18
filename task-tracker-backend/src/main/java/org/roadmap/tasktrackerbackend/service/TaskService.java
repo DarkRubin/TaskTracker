@@ -21,15 +21,6 @@ public class TaskService {
     private final CurrentUserAuthorizationDetails details;
     private final TaskMapper taskMapper;
 
-    public void addStartTasks() {
-        Task add = new Task("🎯Create your own tasks",
-                "For create new task input title above and click 'Add'", details.getCurrentUser());
-        Task star = new Task("⭐Set star on Github",
-                "Add star to this repository on Github", details.getCurrentUser());
-        repository.save(add);
-        repository.save(star);
-    }
-
     public List<Task> getAll() {
         return repository.getAllByOwner(details.getCurrentUser());
     }
