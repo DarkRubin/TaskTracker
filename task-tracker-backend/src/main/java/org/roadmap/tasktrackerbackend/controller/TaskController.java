@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.roadmap.tasktrackerbackend.dto.TaskDTO;
 import org.roadmap.tasktrackerbackend.exception.InvalidDateParameterException;
 import org.roadmap.tasktrackerbackend.model.Task;
-import org.roadmap.tasktrackerbackend.repository.TaskRepository;
-import org.roadmap.tasktrackerbackend.security.CurrentUserAuthorizationDetails;
 import org.roadmap.tasktrackerbackend.service.TaskService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
