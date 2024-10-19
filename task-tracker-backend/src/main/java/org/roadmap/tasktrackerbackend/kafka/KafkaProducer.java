@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class KafkaProducer {
 
+    public static final String SUCCESSFUL_REGISTRATION_MESSAGE = "Hello, %s! Your registration was successful!";
+    public static final String SUCCESS_REGISTRATION_SUBJECT = "Success registration😎";
+
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -21,9 +24,8 @@ public class KafkaProducer {
     }
 
     public void sendSuccessRegistration(String email) {
-        Message message = new Message(
-                email, "Success registration😎", "Hello, " + email + "! Your registration was successful!"
-        );
+        Message message = new Message(email, SUCCESS_REGISTRATION_SUBJECT,
+                SUCCESSFUL_REGISTRATION_MESSAGE.formatted(email));
         try {
             String jsonMessage = objectMapper.writeValueAsString(message);
             kafkaTemplate.send("EMAIL_SENDING_TASKS", jsonMessage);
