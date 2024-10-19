@@ -5,16 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class KafkaProducer {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaProducer.class);
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
@@ -32,7 +28,7 @@ public class KafkaProducer {
             String jsonMessage = objectMapper.writeValueAsString(message);
             kafkaTemplate.send("EMAIL_SENDING_TASKS", jsonMessage);
         } catch (JsonProcessingException e) {
-            LOGGER.error("Error while converting message to json", e);
+            log.error("Error while converting message to json", e);
         }
     }
 
