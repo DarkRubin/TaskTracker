@@ -19,12 +19,13 @@ public class JwtService {
     @Value("${jwt.key}")
     private String key;
 
-    private static final long TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000L;
+    @Value("${jwt.expiration-time}")
+    private long tokenExpirationTime;
 
     public String generateToken(String email) {
         return Jwts.builder().claims(Map.of("email", email))
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME))
+                .expiration(new Date(System.currentTimeMillis() + tokenExpirationTime))
                 .signWith(getSigningKey(), Jwts.SIG.HS256).compact();
     }
 

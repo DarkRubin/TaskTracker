@@ -15,3 +15,4 @@ spring:
     open-in-view: false
 jwt:
   key: ${JWT_KEY}
+  expiration-time: 86400000
