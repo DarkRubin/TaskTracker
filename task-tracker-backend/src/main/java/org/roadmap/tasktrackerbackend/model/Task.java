@@ -28,13 +28,13 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "uuid", nullable = false, length = Integer.MAX_VALUE)
+    @Column(name = "uuid", nullable = false, length = 40)
     private UUID uuid;
 
     @Column(name = "title", length = 100)
     private String title;
 
-    @Column(name = "text", length = Integer.MAX_VALUE)
+    @Column(name = "text", length = 300)
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
