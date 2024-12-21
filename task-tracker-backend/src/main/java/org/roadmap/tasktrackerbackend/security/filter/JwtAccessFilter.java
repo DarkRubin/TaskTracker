@@ -1,20 +1,16 @@
 package org.roadmap.tasktrackerbackend.security.filter;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.roadmap.tasktrackerbackend.exception.InvalidTokenException;
-import org.roadmap.tasktrackerbackend.exception.TokenExpiredException;
+import org.roadmap.tasktrackerbackend.model.User;
 import org.roadmap.tasktrackerbackend.service.JwtService;
 import org.roadmap.tasktrackerbackend.service.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -42,30 +38,26 @@ public class JwtAccessFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(@Nonnull HttpServletRequest request,
-                                    @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            @Nonnull HttpServletRequest request,
+            @Nonnull HttpServletResponse response,
+            @Nonnull FilterChain filterChain
+    ) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
+
         if (header != null && header.startsWith(PREFIX)) {
             String token = header.substring(PREFIX.length());
-            try {
-                var username = jwtService.extractEmail(token);
-                authorize(request, userService.loadUserByUsername(username));
-            } catch (ExpiredJwtException e) {
-                throw new TokenExpiredException();
-            } catch (MalformedJwtException e) {
-                throw new InvalidTokenException();
-            }
+            authorize(request, token);
         }
         filterChain.doFilter(request, response);
     }
 
-    private void authorize(HttpServletRequest request, UserDetails userDetails) {
+    private void authorize(HttpServletRequest request, String token) {
+        User user = userService.getUserByUsernameAndPassword(
+                jwtService.extractEmail(token),
+                jwtService.extractPassword(token));
         var authToken = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                userDetails.getPassword(),
-                userDetails.getAuthorities()
-        );
+                user, user.getPassword(), user.getAuthorities());
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         var context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authToken);

@@ -14,7 +14,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -24,14 +26,15 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "tasks")
-public class Task {
+public class Task implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid", nullable = false, length = 40)
     private UUID uuid;
 
-    @Column(name = "title", length = 100)
+    @Column(name = "title", length = 100, nullable = false)
+    @NotNull
     private String title;
 
     @Column(name = "text", length = 300)
@@ -39,6 +42,7 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
+    @NotNull
     @JoinColumn(name = "owner")
     private User owner;
 
@@ -48,9 +52,10 @@ public class Task {
     @Column(name = "do_before")
     private Instant doBefore;
 
-    public Task(String title, String text, User owner) {
+    public Task(@NotNull String title, String text, @NotNull User owner, Instant doBefore) {
         this.title = title;
         this.text = text;
         this.owner = owner;
+        this.doBefore = doBefore;
     }
 }

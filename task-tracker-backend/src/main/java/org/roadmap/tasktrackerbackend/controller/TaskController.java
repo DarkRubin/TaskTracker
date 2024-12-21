@@ -1,10 +1,12 @@
 package org.roadmap.tasktrackerbackend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.roadmap.tasktrackerbackend.dto.NewTaskDto;
 import org.roadmap.tasktrackerbackend.dto.TaskDTO;
-import org.roadmap.tasktrackerbackend.exception.InvalidDateParameterException;
 import org.roadmap.tasktrackerbackend.model.Task;
+import org.roadmap.tasktrackerbackend.repository.TaskRepository;
 import org.roadmap.tasktrackerbackend.service.TaskService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,16 +17,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @RestController
 @RequiredArgsConstructor
 public class TaskController {
 
     private final TaskService service;
+    private final TaskRepository repository;
 
     @GetMapping("/tasks")
     public List<Task> getAll() {
@@ -42,22 +45,13 @@ public class TaskController {
     }
 
     @GetMapping("/tasks/unfinished/{date}")
-    public List<Task> getUnfinishedByDate(@PathVariable String date) {
-        if (date == null || date.isEmpty()) {
-            return getUnfinished();
-        }
-        try {
-            Instant from = Instant.parse(date);
-            Instant to = from.plus(1, DAYS);
-            return service.getAllBetween(from, to);
-        } catch (DateTimeParseException e) {
-            throw new InvalidDateParameterException();
-        }
+    public List<Task> getUnfinishedByDate(@PathVariable @DateTimeFormat(iso = DATE_TIME) Instant date) {
+        return service.getAllBetween(date, date.plus(1, DAYS));
     }
 
     @PostMapping("/task")
-    public Task add(@RequestBody TaskDTO dto) {
-        return service.save(dto);
+    public Task add(@RequestBody NewTaskDto dto) {
+        return repository.save(new Task(dto.title(), dto.text(), dto.owner(), dto.doBefore()));
     }
 
     @DeleteMapping("/task")
@@ -67,35 +61,27 @@ public class TaskController {
 
     @PutMapping("/task")
     public Task update(@RequestBody TaskDTO dto) {
-        return service.update(service.map(dto));
+        return service.save(dto);
     }
 
     @PatchMapping("/task/title")
-    public Task updateTitle(@RequestBody TaskDTO dto) {
-        Task task = service.getTaskByUuid(dto.uuid());
-        task.setTitle(dto.title());
-        return service.update(task);
+    public void updateTitle(@RequestBody TaskDTO dto) {
+        service.updateTitle(dto);
     }
 
     @PatchMapping("/task/text")
-    public Task updateText(@RequestBody TaskDTO dto) {
-        Task task = service.getTaskByUuid(dto.uuid());
-        task.setText(dto.text());
-        return service.update(task);
+    public void updateText(@RequestBody TaskDTO dto) {
+        service.updateText(dto);
     }
 
     @PatchMapping("/task/finish")
-    public Task finish(@RequestBody TaskDTO dto) {
-        Task task = service.getTaskByUuid(dto.uuid());
-        task.setFinishedTime(Instant.now());
-        return service.update(task);
+    public void finish(@RequestBody TaskDTO dto) {
+        service.updateFinishedTime(dto.uuid(), dto.finishedTime());
     }
 
     @PatchMapping("/task/continue")
-    public Task continueFinished(@RequestBody TaskDTO dto) {
-        Task task = service.getTaskByUuid(dto.uuid());
-        task.setFinishedTime(null);
-        return service.update(task);
+    public void continueFinished(@RequestBody TaskDTO dto) {
+        service.updateFinishedTime(dto.uuid(), null);
     }
 
 }

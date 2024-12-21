@@ -22,8 +22,8 @@ public class JwtService {
     @Value("${jwt.expiration-time}")
     private long tokenExpirationTime;
 
-    public String generateToken(String email) {
-        return Jwts.builder().claims(Map.of("email", email))
+    public String generateToken(String email, String password) {
+        return Jwts.builder().claims(Map.of("email", email, "password", password))
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + tokenExpirationTime))
                 .signWith(getSigningKey(), Jwts.SIG.HS256).compact();
@@ -31,6 +31,10 @@ public class JwtService {
 
     public String extractEmail(String token) {
         return extractAllClaims(token).get("email", String.class);
+    }
+
+    public String extractPassword(String token) {
+        return extractAllClaims(token).get("password", String.class);
     }
 
     private Claims extractAllClaims(String token) {

@@ -154,7 +154,8 @@ $(document).ready(function () {
             method: 'PATCH',
             headers: multiHeader,
             body: `{
-                "uuid": "${uuid}"
+                "uuid": "${uuid}",
+                "finishedTime": "${new Date}"
             }`
         }).then(response => {
             response.ok ? loadTasks() : alert("Error");
@@ -237,6 +238,7 @@ $(document).ready(function () {
             loginModal.show();
             return;
         }
+
         const uuid = $(this).closest('.row').find('.uuid').text();
         fetch(`${host}/task/continue`, {
             method: 'PATCH',
@@ -296,6 +298,7 @@ $(document).ready(function () {
         });
     });
     function isNotAuthorized() {
+        $.ajax().then().error()
         return multiHeader.Authorization === "Bearer null";
 
     }
@@ -475,10 +478,6 @@ $(document).ready(function () {
     function handleError(error) {
         error.json().then(errorInfo => {
             const message = errorInfo.message;
-            if (message === "Authentication token is expired, login for get new token" || 
-                message === "Invalid JWT token") {
-                updateJwtToken();
-            }
             if (message === "User not found" || 
                 message === "User not authorized or token is expired") {
                 showDefaultContent();
@@ -572,19 +571,6 @@ $(document).ready(function () {
         chooser.show();
         timer.hide();
     })
-    
-    
-    function updateJwtToken() {
-        fetch(`${host}/user`, {
-            headers: multiHeader
-        }).then(response => {
-            if (response.ok) {
-                jwtToken = response.headers.get("Authorization");
-                updateJwtHeader();
-            } else handleError(response);
-        })
-        
-    }
 
     let quotes = [];
     let currentQuoteIndex = 0;

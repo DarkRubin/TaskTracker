@@ -2,11 +2,9 @@ package org.roadmap.tasktrackerbackend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.roadmap.tasktrackerbackend.dto.TaskDTO;
-import org.roadmap.tasktrackerbackend.exception.TaskNotFoundException;
-import org.roadmap.tasktrackerbackend.mapper.TaskMapper;
+import org.roadmap.tasktrackerbackend.mapper.TaskMapperImpl;
 import org.roadmap.tasktrackerbackend.model.Task;
 import org.roadmap.tasktrackerbackend.repository.TaskRepository;
-import org.roadmap.tasktrackerbackend.security.CurrentUserAuthorizationDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,48 +16,48 @@ import java.util.UUID;
 public class TaskService {
 
     private final TaskRepository repository;
-    private final CurrentUserAuthorizationDetails details;
-    private final TaskMapper taskMapper;
+    private final UserService userService;
+    private final TaskMapperImpl taskMapper;
 
     public List<Task> getAll() {
-        return repository.getAllByOwner(details.getCurrentUser());
+        return repository.getAllByOwner(userService.getCurrentUser());
     }
 
     public List<Task> getAllFinished() {
-        return repository.getAllByOwnerAndFinishedTimeNotNull(details.getCurrentUser());
+        return repository.getAllByOwnerAndFinishedTimeNotNull(userService.getCurrentUser());
     }
 
     public List<Task> getAllUnfinished() {
-        return repository.getAllByOwnerAndFinishedTimeNull(details.getCurrentUser());
+        return repository.getAllByOwnerAndFinishedTimeNull(userService.getCurrentUser());
     }
 
     public List<Task> getAllBetween(Instant from, Instant to) {
-        return repository.getAllByOwnerAndFinishedTimeBetween(details.getCurrentUser(), from, to);
+        return repository.getAllByOwnerAndFinishedTimeBetween(userService.getCurrentUser(), from, to);
     }
 
     public Task map(TaskDTO taskDTO) {
         return taskMapper.toEntity(taskDTO);
     }
 
-    public Task update(Task task) {
-        task.setOwner(details.getCurrentUser());
+    public Task save(TaskDTO dto) {
+        Task task = map(dto);
+        task.setOwner(userService.getCurrentUser());
         return repository.save(task);
-    }
-
-    public Task getTaskByUuid(UUID id) {
-        return repository.findByUuidAndOwner(id, details.getCurrentUser()).orElseThrow(TaskNotFoundException::new);
     }
 
     public void delete(TaskDTO dto) {
-        Task task = map(dto);
-        task.setOwner(details.getCurrentUser());
-        repository.delete(task);
+        repository.deleteByUuidAndOwner(dto.uuid(), userService.getCurrentUser());
     }
 
-    public Task save(TaskDTO dto) {
-        Task task = map(dto);
-        task.setOwner(details.getCurrentUser());
-        return repository.save(task);
+    public void updateTitle(TaskDTO taskWithNewTitle) {
+        repository.updateTitle(taskWithNewTitle.uuid(), taskWithNewTitle.title());
     }
 
+    public void updateText(TaskDTO taskWithNewText) {
+        repository.updateText(taskWithNewText.uuid(), taskWithNewText.text());
+    }
+
+    public void updateFinishedTime(UUID uuid, Instant finishedTime) {
+        repository.updateFinishedTime(uuid, finishedTime);
+    }
 }

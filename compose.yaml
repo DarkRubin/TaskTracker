@@ -70,6 +70,7 @@ services:
       SPRING_DATASOURCE_USERNAME: ${PG_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${PG_PASSWORD}
       JWT_KEY: ${TOKEN_KEY}
+      EXPIRATION_TIME: 86400000
     networks:
       - task-tracker
 

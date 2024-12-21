@@ -3,6 +3,8 @@ spring:
     enabled: true
   config:
     import: optional:file:resources/.env[.properties]
+  kafka:
+      bootstrap-servers: ${BOOTSTRAP_SERVER}
   application:
     name: task-tracker-backend
   datasource:

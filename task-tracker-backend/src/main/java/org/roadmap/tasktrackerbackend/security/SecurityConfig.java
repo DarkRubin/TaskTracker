@@ -35,7 +35,8 @@ public class SecurityConfig {
                         configurator.requestMatchers(OPTIONS, "/**").permitAll().
                                 requestMatchers(POST, "/user", "/auth/login").permitAll()
                                 .anyRequest().authenticated())
-                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(manager ->
+                        manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAccessFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(exceptionHandlerFilter, JwtAccessFilter.class);

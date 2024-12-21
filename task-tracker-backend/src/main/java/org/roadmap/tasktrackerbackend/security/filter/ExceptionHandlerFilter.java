@@ -5,7 +5,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.roadmap.tasktrackerbackend.exception.BasicRuntimeException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,9 +27,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (BasicRuntimeException e) {
+        } catch (RuntimeException e) {
             handlerExceptionResolver.resolveException(request, response, null, e);
         }
-
     }
 }

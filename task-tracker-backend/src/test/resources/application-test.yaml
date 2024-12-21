@@ -1,0 +1,5 @@
+spring:
+  config:
+    import: optional:file:resources/.env[.properties]
+jwt:
+  key: ${JWT_KEY}
