@@ -1,5 +1,6 @@
 package org.roadmap.tasktrackerbackend.advice;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.roadmap.tasktrackerbackend.exception.BasicRuntimeException;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,12 @@ public class ControllerAdvice {
     @ExceptionHandler(BasicRuntimeException.class)
     public ResponseEntity<ExceptionResponse> handleBasicRuntimeException(BasicRuntimeException ex) {
         return ResponseEntity.status(ex.getCode())
+                .body(new ExceptionResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ExceptionResponse> handleBasicRuntimeException(ExpiredJwtException ex) {
+        return ResponseEntity.status(401)
                 .body(new ExceptionResponse(ex.getMessage()));
     }
 

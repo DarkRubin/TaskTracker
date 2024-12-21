@@ -1,10 +1,8 @@
 package org.roadmap.tasktrackerbackend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.roadmap.tasktrackerbackend.dto.NewTaskDto;
 import org.roadmap.tasktrackerbackend.dto.TaskDTO;
 import org.roadmap.tasktrackerbackend.model.Task;
-import org.roadmap.tasktrackerbackend.repository.TaskRepository;
 import org.roadmap.tasktrackerbackend.service.TaskService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +25,6 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 public class TaskController {
 
     private final TaskService service;
-    private final TaskRepository repository;
 
     @GetMapping("/tasks")
     public List<Task> getAll() {
@@ -50,8 +47,8 @@ public class TaskController {
     }
 
     @PostMapping("/task")
-    public Task add(@RequestBody NewTaskDto dto) {
-        return repository.save(new Task(dto.title(), dto.text(), dto.owner(), dto.doBefore()));
+    public Task add(@RequestBody TaskDTO dto) {
+        return service.save(dto);
     }
 
     @DeleteMapping("/task")
