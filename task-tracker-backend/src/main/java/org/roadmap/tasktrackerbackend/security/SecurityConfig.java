@@ -32,7 +32,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfiguration.corsConfigurationSource()))
                 .authorizeHttpRequests(configurator ->
-                        configurator.requestMatchers(OPTIONS, "/**").permitAll().
+                        configurator.requestMatchers(OPTIONS, "/***").permitAll().
                                 requestMatchers(POST, "/user", "/auth/login").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(manager ->

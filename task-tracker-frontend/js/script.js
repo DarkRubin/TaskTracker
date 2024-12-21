@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
 
-    const host = "http://185.237.207.128:8080"
+    const host = "http://localhost:8080"
 
     //modals
     const signUpModal = bootstrap.Modal.getOrCreateInstance('#sign-up-modal');

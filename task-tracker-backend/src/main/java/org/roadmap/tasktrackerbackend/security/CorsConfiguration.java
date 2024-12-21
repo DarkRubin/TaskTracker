@@ -16,7 +16,7 @@ public class CorsConfiguration {
         var cors = new org.springframework.web.cors.CorsConfiguration();
         cors.setAllowedOrigins(List.of("http://185.237.207.128:80",
                 "http://localhost:80", "http://localhost:63342", "http://185.237.207.128"));
-        cors.setAllowedMethods(List.of("*"));
+        cors.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         cors.setAllowedHeaders(List.of(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION));
         cors.addExposedHeader(HttpHeaders.AUTHORIZATION);
         cors.setAllowCredentials(true);
