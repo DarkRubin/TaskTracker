@@ -4,7 +4,6 @@
 
 #### Task tracker is single page application with microservice architecture, (backend, frontend, email-sender, scheduler)
 #### Functional: registration, authorization, logout, create, read, finish, search, remove, update tasks, track time.
-### Deploy: http://185.237.207.128
 ### Visual:![Знімок екрана 2024-10-18 073424](https://github.com/user-attachments/assets/3431f84d-928a-41cc-b45d-c34f24fb2717)
 #### For self start you need:
 - Clone project 
